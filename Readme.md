@@ -9,3 +9,4 @@ List of subjects:
 3. Data presentationa and visualization (Kozakiewicz)
 4. Real-time analytics (Zając)
 5. Statistical learning methods (Kamiński)
+6. Advanced simulation modeling (Szufel)
