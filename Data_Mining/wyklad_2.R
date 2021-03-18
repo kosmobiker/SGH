@@ -1,0 +1,33 @@
+dane <-
+  read.table("../data/Dane ZDM/german.txt",header=TRUE)
+dim(dane)
+colnames(dane)
+hist(dane$age)
+cor(dane$duration, dane$age)
+chisq.test(dane$default, dane$instalment)
+summary(dane)
+
+train_indexes = sample.int(1000, 750, replace = FALSE)
+train_dataset <- dane[train_indexes, ]
+validate_indexes <- setdiff(1:1000, train_indexes)
+valid_dataset <- dane[validate_indexes, ]
+freq <- table(dane [, "default"])
+print(freq)
+freq_train <- table(train_dataset [, "default"])
+freq_valid <- table(valid_dataset [, "default"])
+# install.packages("gmodels")
+library("gmodels")
+CrossTable(train_dataset$default)
+CrossTable(valid_dataset$default)
+any(is.na(dane))
+na.fail(dane)
+kopia_d <- dane
+is.na(kopia_d$credit_amt)<-(dane$credit_amt>3500)
+na.fail(kopia_d$credit_amt)
+srednia<-mean(kopia_d$credit_amt)
+podsumowanie<-summary(kopia_d$credit_amt)
+print(podsumowanie)
+# install.packages("naniar")
+library("naniar")
+kopia_d$credit_amt<-impute_mean(kopia_d$credit_amt)
+any(is.na(kopia_d$credit_amt))

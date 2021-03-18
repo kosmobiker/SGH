@@ -1,7 +1,7 @@
 rm(list=ls())
 
 
-d <- read.table(file="data/GoldPrice.csv",sep=",",dec=".",header=T,stringsAsFactors=F)
+d <- read.table(file="../data/data_pwid/GoldPrice.csv",sep=",",dec=".",header=T,stringsAsFactors=F)
 #d <- d[,c(1,grep("USD",d[2,]))]
 d <- d[-c(1:4),c(1,14)]
 

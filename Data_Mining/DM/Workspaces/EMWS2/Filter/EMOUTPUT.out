@@ -1,0 +1,278 @@
+*------------------------------------------------------------*
+User:                Vlad
+Date:                18 March 2021
+Time:                21:40:55
+*------------------------------------------------------------*
+* Training Output
+*------------------------------------------------------------*
+ 
+ 
+ 
+ 
+Variable Summary
+ 
+            Measurement    Frequency
+Role           Level         Count
+ 
+INPUT        BINARY             2
+INPUT        INTERVAL          14
+INPUT        NOMINAL            1
+REJECTED     NOMINAL            3
+TARGET       BINARY             1
+
+
+*------------------------------------------------------------*
+* Score Output
+*------------------------------------------------------------*
+ 
+ 
+ 
+Filter Limits for Interval Variables
+(maximum 500 observations printed)
+ 
+                                                       Keep
+                                            Filter    Missing
+Variable    Role      Minimum    Maximum    Method    Values     Label
+ 
+CZAS_W      INPUT    -18.4015    220.531    STDDEV       Y       Czas wspó³pracy
+DZIENMIN    INPUT     16.3230    343.200    STDDEV       Y       Dzieñ minuty
+DZIENOPL    INPUT      2.7840     58.341    STDDEV       Y       Dzieñ op³ata
+DZIENROZ    INPUT     40.2190    160.663    STDDEV       Y       Dzieñ rozmowy
+L_WIAD      INPUT    -32.9692     49.177    STDDEV       Y       Liczba wiadomoœci
+M_MIN       INPUT      1.8618     18.613    STDDEV       Y       Miêdzynarodowe minuty
+M_OPL       INPUT      0.5033      5.026    STDDEV       Y       Miedzynarodowe op³ata
+M_ROZM      INPUT     -2.9049     11.866    STDDEV       Y       Miedzynarodowe rozmowy
+NOCMIN      INPUT     49.1505    352.594    STDDEV       Y       Noc minuty
+NOCOPL      INPUT      2.2113     15.868    STDDEV       Y       Noc op³ata
+NOCROZ      INPUT     41.4079    158.816    STDDEV       Y       Noc rozmowy
+WIECZMIN    INPUT     48.8134    353.137    STDDEV       Y       Wieczór minuty
+WIECZOPL    INPUT      4.1515     30.016    STDDEV       Y       Wieczór op³ata
+WIECZROZ    INPUT     40.3464    159.882    STDDEV       Y       Wieczór rozmowy
+ 
+ 
+ 
+Excluded Class Values
+(maximum 500 observations printed)
+ 
+                                   Train     Train                                               Filter
+Variable    Role     Level         Count    Percent                    Label                     Method
+ 
+L_ROZBOK    INPUT      6              22    0.66007    Liczba rozmów z biurem obs³ugi klienta    MINPCT
+L_ROZBOK    INPUT      7               9    0.27003    Liczba rozmów z biurem obs³ugi klienta    MINPCT
+L_ROZBOK    INPUT      8               2    0.06001    Liczba rozmów z biurem obs³ugi klienta    MINPCT
+L_ROZBOK    INPUT      9               2    0.06001    Liczba rozmów z biurem obs³ugi klienta    MINPCT
+ 
+ 
+ 
+ 
+Number Of Observations
+ 
+Data
+Role     Filtered    Excluded    DATA
+ 
+TRAIN      3169         164      3333
+ 
+ 
+ 
+Statistics for Original and FILTERED Data
+(maximum 500 observations printed)
+ 
+Data Role=TRAIN Variable=CZAS_W
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3333.00     3169.00
+Missing                   0.00        0.00
+Minimum                   1.00        1.00
+Maximum                 243.00      217.00
+Mean                    101.06      100.86
+Standard Deviation       39.82       39.47
+Skewness                  0.10        0.06
+Kurtosis                 -0.11       -0.21
+ 
+ 
+Data Role=TRAIN Variable=DZIENMIN
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3331.00     3167.00
+Missing                   2.00        2.00
+Minimum                   0.00       17.60
+Maximum                 350.80      337.40
+Mean                    179.76      180.27
+Standard Deviation       54.48       53.85
+Skewness                 -0.03       -0.01
+Kurtosis                 -0.02       -0.14
+ 
+ 
+Data Role=TRAIN Variable=DZIENOPL
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3333.00     3169.00
+Missing                   0.00        0.00
+Minimum                   0.00        2.99
+Maximum                  59.64       57.36
+Mean                     30.56       30.65
+Standard Deviation        9.26        9.15
+Skewness                 -0.03       -0.01
+Kurtosis                 -0.02       -0.14
+ 
+ 
+Data Role=TRAIN Variable=DZIENROZ
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3330.00     3166.00
+Missing                   3.00        3.00
+Minimum                   0.00       42.00
+Maximum                 165.00      160.00
+Mean                    100.44      100.61
+Standard Deviation       20.07       19.73
+Skewness                 -0.11       -0.02
+Kurtosis                  0.24       -0.16
+ 
+ 
+Data Role=TRAIN Variable=L_WIAD
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3331.00     3167.00
+Missing                   2.00        2.00
+Minimum                   0.00        0.00
+Maximum                  51.00       49.00
+Mean                      8.10        7.98
+Standard Deviation       13.69       13.59
+Skewness                  1.26        1.28
+Kurtosis                 -0.05       -0.02
+ 
+ 
+Data Role=TRAIN Variable=M_MIN
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3333.00     3169.00
+Missing                   0.00        0.00
+Minimum                   0.00        2.00
+Maximum                  20.00       18.40
+Mean                     10.24       10.31
+Standard Deviation        2.79        2.67
+Skewness                 -0.25       -0.04
+Kurtosis                  0.61       -0.02
+ 
+ 
+Data Role=TRAIN Variable=M_OPL
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3333.00     3169.00
+Missing                   0.00        0.00
+Minimum                   0.00        0.54
+Maximum                   5.40        4.97
+Mean                      2.76        2.78
+Standard Deviation        0.75        0.72
+Skewness                 -0.25       -0.04
+Kurtosis                  0.61       -0.02
+ 
+ 
+Data Role=TRAIN Variable=M_ROZM
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3328.00     3164.00
+Missing                   5.00        5.00
+Minimum                   0.00        1.00
+Maximum                  20.00       11.00
+Mean                      4.48        4.37
+Standard Deviation        2.46        2.16
+Skewness                  1.32        0.77
+Kurtosis                  3.08        0.23
+ 
+ 
+Data Role=TRAIN Variable=NOCMIN
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3333.00     3169.00
+Missing                   0.00        0.00
+Minimum                  23.20       50.10
+Maximum                 395.00      352.50
+Mean                    200.87      200.92
+Standard Deviation       50.57       49.99
+Skewness                  0.01       -0.02
+Kurtosis                  0.09       -0.13
+ 
+ 
+Data Role=TRAIN Variable=NOCOPL
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3332.00     3168.00
+Missing                   1.00        1.00
+Minimum                   1.04        2.25
+Maximum                  17.77       15.86
+Mean                      9.04        9.04
+Standard Deviation        2.28        2.25
+Skewness                  0.01       -0.03
+Kurtosis                  0.09       -0.13
+ 
+ 
+Data Role=TRAIN Variable=NOCROZ
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3328.00     3164.00
+Missing                   5.00        5.00
+Minimum                  33.00       42.00
+Maximum                 175.00      158.00
+Mean                    100.11      100.03
+Standard Deviation       19.57       19.40
+Skewness                  0.03        0.01
+Kurtosis                 -0.07       -0.21
+ 
+ 
+Data Role=TRAIN Variable=WIECZMIN
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3332.00     3168.00
+Missing                   1.00        1.00
+Minimum                   0.00       49.20
+Maximum                 363.70      351.60
+Mean                    200.98      201.08
+Standard Deviation       50.72       50.09
+Skewness                 -0.02        0.01
+Kurtosis                  0.02       -0.12
+ 
+ 
+Data Role=TRAIN Variable=WIECZOPL
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3333.00     3169.00
+Missing                   0.00        0.00
+Minimum                   0.00        4.18
+Maximum                  30.91       29.89
+Mean                     17.08       17.09
+Standard Deviation        4.31        4.26
+Skewness                 -0.02        0.01
+Kurtosis                  0.03       -0.12
+ 
+ 
+Data Role=TRAIN Variable=WIECZROZ
+ 
+Statistics            Original    Filtered
+ 
+Non Missing            3333.00     3169.00
+Missing                   0.00        0.00
+Minimum                   0.00       42.00
+Maximum                 170.00      159.00
+Mean                    100.11      100.20
+Standard Deviation       19.92       19.61
+Skewness                 -0.06       -0.01
+Kurtosis                  0.21       -0.10
+
+
+*------------------------------------------------------------*
+* Report Output
+*------------------------------------------------------------*

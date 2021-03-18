@@ -1,0 +1,289 @@
+*------------------------------------------------------------*
+User:                Vlad
+Date:                18 March 2021
+Time:                21:07:33
+*------------------------------------------------------------*
+* Training Output
+*------------------------------------------------------------*
+ 
+ 
+ 
+ 
+Variable Summary
+ 
+            Measurement    Frequency
+Role           Level         Count
+ 
+INPUT        BINARY             2
+INPUT        INTERVAL          14
+INPUT        NOMINAL            1
+REJECTED     NOMINAL            3
+TARGET       BINARY             1
+ 
+ 
+ 
+Variable Levels Summary
+(maximum 500 observations printed)
+ 
+                      Frequency
+Variable     Role       Count
+ 
+ CHURN      TARGET        2
+ 
+ 
+ 
+Class Variable Summary Statistics
+(maximum 500 observations printed)
+ 
+Data Role=TRAIN
+ 
+                               Number
+Data     Variable                of                            Mode                  Mode2
+Role       Name       Role     Levels    Missing    Mode    Percentage    Mode2    Percentage
+ 
+TRAIN    L_ROZBOK    INPUT       10         0        1        35.43         2        22.77
+TRAIN    PLAN_M      INPUT        3         1        0        90.28         1         9.69
+TRAIN    POCZTA_G    INPUT        3         6        0        72.25         1        27.57
+TRAIN    CHURN       TARGET       2         0        0        85.51         1        14.49
+ 
+ 
+ 
+Distribution of Class Target and Segment Variables
+(maximum 500 observations printed)
+ 
+Data Role=TRAIN
+ 
+Data     Variable                        Frequency
+Role       Name       Role     Level         Count    Percent
+ 
+TRAIN     CHURN      TARGET      0            2850    85.5086
+TRAIN     CHURN      TARGET      1             483    14.4914
+ 
+ 
+ 
+Interval Variable Summary Statistics
+(maximum 500 observations printed)
+ 
+Data Role=TRAIN
+ 
+                                 Standard          Non
+Variable    Role         Mean    Deviation     Missing     Missing     Minimum      Median     Maximum    Skewness    Kurtosis
+ 
+CZAS_W      INPUT    101.0648    39.82211         3333           0           1         101         243    0.096606    -0.10784
+DZIENMIN    INPUT    179.7617    54.47956         3331           2           0       179.4       350.8    -0.02844    -0.02092
+DZIENOPL    INPUT    30.56231    9.259435         3333           0           0        30.5       59.64    -0.02908    -0.01981
+DZIENROZ    INPUT    100.4408    20.07395         3330           3           0         101         165     -0.1124    0.242867
+L_WIAD      INPUT    8.103873    13.69104         3331           2           0           0          51    1.263902    -0.05353
+M_MIN       INPUT    10.23729     2.79184         3333           0           0        10.3          20    -0.24514    0.609185
+M_OPL       INPUT    2.764581    0.753773         3333           0           0        2.78         5.4    -0.24529     0.60961
+M_ROZM      INPUT    4.480469    2.461775         3328           5           0           4          20    1.322397    3.083448
+NOCMIN      INPUT     200.872    50.57385         3333           0        23.2       201.1         395    0.008921    0.085816
+NOCOPL      INPUT    9.039664     2.27613         3332           1        1.04        9.05       17.77    0.008476     0.08517
+NOCROZ      INPUT    100.1121    19.56807         3328           5          33         100         175    0.032242    -0.06987
+WIECZMIN    INPUT    200.9755    50.72067         3332           1           0       201.3       363.7     -0.0236    0.024898
+WIECZOPL    INPUT    17.08354    4.310668         3333           0           0       17.11       30.91    -0.02386    0.025487
+WIECZROZ    INPUT    100.1143    19.92263         3333           0           0         100         170    -0.05556    0.206156
+ 
+ 
+ 
+Class Variable Summary Statistics by Class Target
+(maximum 500 observations printed)
+ 
+Data Role=TRAIN Variable Name=L_ROZBOK
+ 
+                       Number
+             Target      of                            Mode                  Mode2
+Target       Level     Levels    Missing    Mode    Percentage    Mode2    Percentage
+ 
+CHURN          0          9         0        1        37.16         2        23.58
+CHURN          1         10         0        1        25.26         0        19.05
+_OVERALL_                10         0        1        35.43         2        22.77
+ 
+ 
+Data Role=TRAIN Variable Name=PLAN_M
+ 
+                       Number
+             Target      of                            Mode                  Mode2
+Target       Level     Levels    Missing    Mode    Percentage    Mode2    Percentage
+ 
+CHURN          0          3         1        0        93.44         1         6.53
+CHURN          1          2         0        0        71.64         1        28.36
+_OVERALL_                 3         1        0        90.28         1         9.69
+ 
+ 
+Data Role=TRAIN Variable Name=POCZTA_G
+ 
+                       Number
+             Target      of                            Mode                  Mode2
+Target       Level     Levels    Missing    Mode    Percentage    Mode2    Percentage
+ 
+CHURN          0          3         5        0        70.35         1        29.47
+CHURN          1          3         1        0        83.44         1        16.36
+_OVERALL_                 3         6        0        72.25         1        27.57
+ 
+ 
+ 
+Interval Variable Summary Statistics by Class Target
+(maximum 500 observations printed)
+ 
+Data Role=TRAIN Variable=CZAS_W
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role          Label
+ 
+CHURN          0            100           0        2850           1         243    100.7937    39.88235     0.090523    -0.13379    INPUT    Czas wspó³pracy
+CHURN          1            103           0         483           1         225    102.6646    39.46782     0.137132    0.056621    INPUT    Czas wspó³pracy
+_OVERALL_                   101           0        3333           1         243    101.0648    39.82211     0.096606    -0.10784    INPUT    Czas wspó³pracy
+ 
+ 
+Data Role=TRAIN Variable=DZIENMIN
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role        Label
+ 
+CHURN          0          177.1           2        2848           0       315.6    175.1568    50.19238     -0.22548    -0.00491    INPUT    Dzieñ minuty
+CHURN          1          217.6           0         483           0       350.8    206.9141    68.99779     -0.19922    -0.80905    INPUT    Dzieñ minuty
+_OVERALL_                 179.4           2        3331           0       350.8    179.7617    54.47956     -0.02844    -0.02092    INPUT    Dzieñ minuty
+ 
+ 
+Data Role=TRAIN Variable=DZIENOPL
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role        Label
+ 
+CHURN          0          30.12           0        2850           0       53.65    29.78042    8.530835      -0.2264    -0.00382    INPUT    Dzieñ op³ata
+CHURN          1          36.99           0         483           0       59.64    35.17592    11.72971     -0.19921    -0.80896    INPUT    Dzieñ op³ata
+_OVERALL_                  30.5           0        3333           0       59.64    30.56231    9.259435     -0.02908    -0.01981    INPUT    Dzieñ op³ata
+ 
+ 
+Data Role=TRAIN Variable=DZIENROZ
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role         Label
+ 
+CHURN          0            100           3        2847           0         163    100.2891    19.80668       -0.064    0.126951    INPUT    Dzieñ rozmowy
+CHURN          1            103           0         483           0         165    101.3354    21.58231     -0.35339    0.729682    INPUT    Dzieñ rozmowy
+_OVERALL_                   101           3        3330           0         165    100.4408    20.07395      -0.1124    0.242867    INPUT    Dzieñ rozmowy
+ 
+ 
+Data Role=TRAIN Variable=L_WIAD
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role           Label
+ 
+CHURN          0              0           2        2848           0          51    8.610604    13.91614     1.166359    -0.29324    INPUT    Liczba wiadomoœci
+CHURN          1              0           0         483           0          48    5.115942    11.86014     2.040412    2.563462    INPUT    Liczba wiadomoœci
+_OVERALL_                     0           2        3331           0          51    8.103873    13.69104     1.263902    -0.05353    INPUT    Liczba wiadomoœci
+ 
+ 
+Data Role=TRAIN Variable=M_MIN
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role             Label
+ 
+CHURN          0           10.2           0        2850           0        18.9    10.15888    2.784489     -0.29378    0.686592    INPUT    Miêdzynarodowe minuty
+CHURN          1           10.6           0         483           2          20        10.7     2.79319     0.021392    0.000072    INPUT    Miêdzynarodowe minuty
+_OVERALL_                  10.3           0        3333           0          20    10.23729     2.79184     -0.24514    0.609185    INPUT    Miêdzynarodowe minuty
+ 
+ 
+Data Role=TRAIN Variable=M_OPL
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role             Label
+ 
+CHURN          0           2.75           0        2850           0         5.1    2.743404    0.751784      -0.2939    0.687306    INPUT    Miedzynarodowe op³ata
+CHURN          1           2.86           0         483        0.54         5.4    2.889545    0.754152     0.021009    -0.00098    INPUT    Miedzynarodowe op³ata
+_OVERALL_                  2.78           0        3333           0         5.4    2.764581    0.753773     -0.24529     0.60961    INPUT    Miedzynarodowe op³ata
+ 
+ 
+Data Role=TRAIN Variable=M_ROZM
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role             Label
+ 
+CHURN          0              4           4        2846           0          19     4.53338    2.442616     1.260331    2.805211    INPUT    Miedzynarodowe rozmowy
+CHURN          1              4           1         482           1          20     4.16805    2.552317     1.712287    4.878715    INPUT    Miedzynarodowe rozmowy
+_OVERALL_                     4           5        3328           0          20    4.480469    2.461775     1.322397    3.083448    INPUT    Miedzynarodowe rozmowy
+ 
+ 
+Data Role=TRAIN Variable=NOCMIN
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role       Label
+ 
+CHURN          0          200.1           0        2850        23.2         395    200.1332    51.10503      0.01723    0.099553    INPUT    Noc minuty
+CHURN          1          204.8           0         483        47.4       354.9    205.2317    47.13282     -0.00507     -0.0778    INPUT    Noc minuty
+_OVERALL_                 201.1           0        3333        23.2         395     200.872    50.57385     0.008921    0.085816    INPUT    Noc minuty
+ 
+ 
+Data Role=TRAIN Variable=NOCOPL
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role       Label
+ 
+CHURN          0              9           1        2849        1.04       17.77    9.006458     2.30008     0.016775    0.098723    INPUT    Noc op³ata
+CHURN          1           9.22           0         483        2.13       15.97    9.235528    2.121081     -0.00546    -0.07727    INPUT    Noc op³ata
+_OVERALL_                  9.05           1        3332        1.04       17.77    9.039664     2.27613     0.008476     0.08517    INPUT    Noc op³ata
+ 
+ 
+Data Role=TRAIN Variable=NOCROZ
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role        Label
+ 
+CHURN          0            100           5        2845          33         175    100.0633    19.50551     0.026639    -0.01349    INPUT    Noc rozmowy
+CHURN          1            100           0         483          49         158    100.3996    19.95066     0.061494    -0.37212    INPUT    Noc rozmowy
+_OVERALL_                   100           5        3328          33         175    100.1121    19.56807     0.032242    -0.06987    INPUT    Noc rozmowy
+ 
+ 
+Data Role=TRAIN Variable=WIECZMIN
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role         Label
+ 
+CHURN          0          199.5           1        2849           0       361.8    199.0369    50.29984     -0.04277    0.033568    INPUT    Wieczór minuty
+CHURN          1          211.3           0         483        70.9       363.7    212.4101    51.72891     0.033129    -0.09232    INPUT    Wieczór minuty
+_OVERALL_                 201.3           1        3332           0       363.7    200.9755    50.72067      -0.0236    0.024898    INPUT    Wieczór minuty
+ 
+ 
+Data Role=TRAIN Variable=WIECZOPL
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role         Label
+ 
+CHURN          0          16.97           0        2850           0       30.75    16.91891    4.274863      -0.0431    0.034232    INPUT    Wieczór op³ata
+CHURN          1          17.96           0         483        6.03       30.91    18.05497    4.396762     0.033144     -0.0924    INPUT    Wieczór op³ata
+_OVERALL_                 17.11           0        3333           0       30.91    17.08354    4.310668     -0.02386    0.025487    INPUT    Wieczór op³ata
+ 
+ 
+Data Role=TRAIN Variable=WIECZROZ
+ 
+             Target                                 Non                                        Standard
+Target       Level       Median     Missing     Missing     Minimum     Maximum        Mean    Deviation    Skewness    Kurtosis    Role          Label
+ 
+CHURN          0            100           0        2850           0         170    100.0386    19.95841     -0.06922     0.24951    INPUT    Wieczór rozmowy
+CHURN          1            101           0         483          48         168    100.5611    19.72471     0.029856    -0.06127    INPUT    Wieczór rozmowy
+_OVERALL_                   100           0        3333           0         170    100.1143    19.92263     -0.05556    0.206156    INPUT    Wieczór rozmowy
+ 
+ 
+ 
+Chi-Square Statistics
+(maximum 500 observations printed)
+ 
+Data Role=TRAIN Target=CHURN
+ 
+ Input      Chi-Square    Df      Prob
+ 
+L_ROZBOK      342.6746     9    <.0001
+PLAN_M        225.1608     2    <.0001
+POCZTA_G       35.5862     2    <.0001
+
+
+*------------------------------------------------------------*
+* Score Output
+*------------------------------------------------------------*
+
+
+*------------------------------------------------------------*
+* Report Output
+*------------------------------------------------------------*

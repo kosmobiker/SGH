@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?><_ROOT_  OutputCatalog="WORK.GOUT" TrainCode="" NumericThreshold="20" Orientation="VERTICAL"
+ Statistic="FREQ" ShowValues="Y" IncludeMissing="Y" IntervalTargetChart="MEAN" ChartType="CHART"
+ IntTargetRegression="LINEAR" DisplayRegEquation="N" ConfidenceInterval="Y" ImageFormat="GIF"
+ ForceRun="N" RunAction="Train" Component="MultiPlot" RawCreateTime="1931721191.5"
+ CreateTime="18MAR2021:21:13:12" RunId="6e80e54f-14c3-4978-b2d2-fd84e56786ff" RawLastTimeRun="1931721200.1"
+ RawRunTime="5.5979998112" LastTimeRun="18MAR2021:21:13:20" RunTime="0 Hr. 0 Min. 5.60 Sec."
+>
+<VARIABLEPROPERTIES/>
+<FILEPROPERTIES/>
+</_ROOT_>

@@ -1,0 +1,60 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1 
+Traverser: Traverser invoked.  MPCONNECT command is sas. 
+Traverser: Beginning flow traversal 
+*------------------------------------------------------------* 
+* 
+* Ids : Beginning Update 
+* datetime : 18MAR2021:21:43:49 
+* 
+*------------------------------------------------------------* 
+NOTE: Data file DANE.CHURN.DATA is in a format that is native to another host, or the file encoding does not match the session encoding. Cross Environment Data Access will be used, which might require additional CPU resources and might reduce performance.
+27621      %let _HPDMGRIDHOST=;
+27622      %let _HPDMGRIDINSTALLLOC=;
+27623      %let _HPDMGRIDDATASERVER=;
+27624      %hpdm_gridSetOPtions;
+
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+*------------------------------------------------------------* 
+* 
+* Ids : End Update 
+* datetime : 18MAR2021:21:43:49 
+* 
+*------------------------------------------------------------* 
+traverser_readyNode_note 
+*------------------------------------------------------------* 
+* 
+* Filter : Beginning Update 
+* datetime : 18MAR2021:21:43:49 
+* 
+*------------------------------------------------------------* 
+27644      %let _HPDMGRIDHOST=;
+27645      %let _HPDMGRIDINSTALLLOC=;
+27646      %let _HPDMGRIDDATASERVER=;
+27647      %hpdm_gridSetOPtions;
+
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+*------------------------------------------------------------* 
+* 
+* Filter : End Update 
+* datetime : 18MAR2021:21:43:49 
+* 
+*------------------------------------------------------------* 
+Traverser: Run Completed 
+27648      proc printto;
+27649      run;
+

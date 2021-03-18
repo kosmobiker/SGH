@@ -1,0 +1,100 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1 
+Traverser: Traverser invoked.  MPCONNECT command is sas. 
+Traverser: Beginning flow traversal 
+*------------------------------------------------------------* 
+* 
+* Ids : Beginning Update 
+* datetime : 18MAR2021:20:23:01 
+* 
+*------------------------------------------------------------* 
+NOTE: Data file DANE.OSOBY.DATA is in a format that is native to another host, or the file encoding does not match the session encoding. Cross Environment Data Access will be used, which might require additional CPU resources and might reduce performance.
+7946       *------------------------------------------------------------*;
+7947       * Ids: Update Variables Set;
+7948       *------------------------------------------------------------*;
+
+7949       data EMWS1.Ids_VariableSet;
+7950       length ROLE $32;
+7951       length LEVEL $10;
+7952       length REPORT $1;
+7953       label REPORT = "Report";
+7954       length ORDER $8;
+7955       length DROP $1;
+7956       length LOWERLIMIT 8;
+7957       length UPPERLIMIT 8;
+7958       set EMWS1.Ids_EMCMETADEFAULT;
+7959       run;
+
+NOTE: There were 10 observations read from the data set EMWS1.IDS_EMCMETADEFAULT.
+NOTE: The data set EMWS1.IDS_VARIABLESET has 10 observations and 21 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+7960       * Ids: End of Update Variables Set;
+7961       *------------------------------------------------------------*;
+
+7962       *------------------------------------------------------------*;
+7963       * Ids: Computing metadata for DATA data;
+7964       *------------------------------------------------------------*;
+
+NOTE: Data file DANE.OSOBY.DATA is in a format that is native to another host, or the file encoding does not match the session encoding. Cross Environment Data Access will be used, which might require additional CPU resources and might reduce performance.
+7974       data EMWS1.Ids_EMINFO;
+7975       length TARGET KEY $32 DATA $43;
+7976       TARGET="";
+7977       KEY="IDSTABLE";
+7978       DATA="DANE.OSOBY";
+7979       output;
+7980       TARGET="";
+7981       KEY="STATS";
+7982       DATA="EMWS1.Ids_EMSTATDEFAULT";
+7983       output;
+7984       run;
+
+NOTE: The data set EMWS1.IDS_EMINFO has 2 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+7985       data EMWS1.Ids_CMeta_DATA;
+7986       set EMWS1.Ids_VariableSet;
+7987       drop DROP;
+7988       where DROP='N';
+7989       run;
+
+NOTE: There were 10 observations read from the data set EMWS1.IDS_VARIABLESET.
+      WHERE DROP='N';
+NOTE: The data set EMWS1.IDS_CMETA_DATA has 10 observations and 20 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+NOTE: Data file DANE.OSOBY.DATA is in a format that is native to another host, or the file encoding does not match the session encoding. Cross Environment Data Access will be used, which might require additional CPU resources and might reduce performance.
+7991       %let _HPDMGRIDHOST=;
+7992       %let _HPDMGRIDINSTALLLOC=;
+7993       %let _HPDMGRIDDATASERVER=;
+7994       %hpdm_gridSetOPtions;
+
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+*------------------------------------------------------------* 
+* 
+* Ids : End Update 
+* datetime : 18MAR2021:20:23:02 
+* 
+*------------------------------------------------------------* 
+Traverser: Run Completed 
+7995       proc printto;
+7996       run;
+

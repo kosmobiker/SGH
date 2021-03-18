@@ -1,7 +1,7 @@
 rm(list=ls())
 
 # odczyt danych + formatowanie 
-d <- read.table(file="data/PL_WYK_KSE.csv",sep=";",dec=",",header=T,stringsAsFactors=F)
+d <- read.table(file="../data/data_pwid/PL_WYK_KSE.csv",sep=";",dec=",",header=T,stringsAsFactors=F)
 d <- d[,c(1:3)]
 colnames(d) <- c("Data","Godzina","KSE")
 print(table(d$Godzina))

@@ -1,0 +1,22 @@
+if ROLE in('INPUT', 'REJECTED') then do;
+if upcase(NAME) in(
+'CZAS_W'
+'DZIENMIN'
+'DZIENOPL'
+'DZIENROZ'
+'L_ROZBOK'
+'L_WIAD'
+'M_MIN'
+'M_OPL'
+'M_ROZM'
+'NOCMIN'
+'NOCOPL'
+'NOCROZ'
+'PLAN_M'
+'POCZTA_G'
+'WIECZMIN'
+'WIECZOPL'
+'WIECZROZ'
+) then ROLE='INPUT';
+else delete;
+end;

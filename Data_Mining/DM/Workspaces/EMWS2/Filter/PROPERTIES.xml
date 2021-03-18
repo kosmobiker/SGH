@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?><_ROOT_  KeepMissingClass="Y" KeepMissingInterval="Y" NormalizeClassValue="Y" ExportTable="FILTERED"
+ TabletoFilter="TRAIN" IntervalFilterMethod="STDDEV" ClassFilterMethod="MINPCT" MinFreq="1"
+ MinPercent="0.01" MaxValues="25" MADSCutoff="9" SpacingsCutoff="9" StddevCutoff="3"
+ PercentsCutoff="0.5" PublishScoreCode="Y" CreateDistributionData="Y" UpdateClassLevel="N"
+ ForceRun="N" RunAction="Train" Component="Filter" RawCreateTime="1931722771.5" CreateTime="18MAR2021:21:39:32"
+ RunId="c138eca6-3ace-4ba0-a007-d03057bfad17">
+<VARIABLEPROPERTIES/>
+<FILEPROPERTIES ><![CDATA[
+CLASSFILTER
+]]>
+</FILEPROPERTIES></_ROOT_>
