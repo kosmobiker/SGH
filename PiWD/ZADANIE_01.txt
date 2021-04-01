@@ -1,0 +1,22 @@
+Napisac skrypt, ktorego wynikiem beda grafiki przedstawione na PiWD_zadanie_01.pdf na stronach 4 i 5. 
+Odpowiednie grafiki powinny byc maksymalnie podobne - idealnie identyczne. 
+Skrypt powinien uruchamiac sie w katalogu nadrzednym dla data/, w ktorym znajduja sie dane:
+- PZHGrypaZachorowania.csv
+- PZHGrypaZgony.csv
+
+Skrypt powinien uruchamiac sie w sposob nastepujacy:
+
+> source("zadanie_01.r")
+
+Za zadanie mozna zdobyc 2 punkty (po jednym punkcie za wykres). 
+Zadanie nalezy 2021.04.09 23:59:59. Zadanie pzreslane po terminie - NIE BEDZIE SPRAWDZANE!!!
+Zadanie nalezy przeslac na adres: mariusz.kozakiewicz@sgh.waw.pl.
+Zadanie nalezy wyslac z maila uczelnianego.
+Tresc tematu maila: PiWD/XXXXX/zadanie_01, gdzie XXXXX to numer albumu.
+Zalacznik powinien skladac sie tylko i wylacznie z jednego pliku o nazwie "zadanie_01.r". 
+
+
+
+
+
+
