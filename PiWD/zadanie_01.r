@@ -1,20 +1,20 @@
 rm(list=ls())
 
-# L <- read.table(
-#    file="../data/data_pwid/PZHGrypaZachorowania.csv",
-#    sep=";",
-#    dec=",",
-#    header=T,
-#    stringsAsFactors=F,
-#    encoding = 'UTF-8')
-
 L <- read.table(
-   file="data/PZHGrypaZachorowania.csv",
+   file="../data/data_pwid/PZHGrypaZachorowania.csv",
    sep=";",
    dec=",",
    header=T,
    stringsAsFactors=F,
    encoding = 'UTF-8')
+
+# L <- read.table(
+#    file="data/PZHGrypaZachorowania.csv",
+#    sep=";",
+#    dec=",",
+#    header=T,
+#    stringsAsFactors=F,
+#    encoding = 'UTF-8')
 
 daneRobocze <- L[L$Region=="POLSKA",]
 
