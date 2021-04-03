@@ -46,20 +46,20 @@ def get_prediction():
     # sepal length
     sepal_length = float(request.args.get('sl'))
     # sepal width
-    #sepal_width = float(request.args.get('sw'))
+    sepal_width = float(request.args.get('sw'))
     # petal length
     petal_length = float(request.args.get('pl'))
     # petal width
-    #petal_width = float(request.args.get('pw'))
+    petal_width = float(request.args.get('pw'))
 
     # The features of the observation used to predict
-    #features = [sepal_length,
-    #            sepal_width,
-    #            petal_length,
-    #           petal_width]
-    
     features = [sepal_length,
-                petal_length]
+               sepal_width,
+               petal_length,
+              petal_width]
+    
+#     features = [sepal_length,
+#                 petal_length]
     
     print(features)
     # Load pickled model file
