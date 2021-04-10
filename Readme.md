@@ -12,4 +12,4 @@ List of subjects:
 6. Advanced simulation modeling (Szufel)
 7. Data bases (Wódz)
 8. Event history analysis / Logistic Regression (Frątczak)
-9. Big Data (Ragało)
+9. Big Data (Rafało)
