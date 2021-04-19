@@ -31,7 +31,7 @@ proc freq data=work_data order=formatted;
 	tables city_development_index*gender*education_level*target/relrisk chisq measures cmh;
 run;
 
-/*proc logistic -  all variables used*/
+/*proc logistic -  all variables are used*/
 ods graphics on;
 proc logistic data=work_data plots(only)=roc;
 	class city_development_index gender education_level;
@@ -41,7 +41,7 @@ proc logistic data=work_data plots(only)=roc;
 run;
 ods graphics off;
 
-/*proc logistic and proc genmod*/
+/*proc genmod*/
 ods graphics on;
 proc genmod data=work_data;
 	class city_development_index gender education_level;

@@ -1,0 +1,8 @@
+1 pkt.
+Przygotowac skrypt demonstracyjny dla ciekawej biblioteki realizujacej wizualizacje z wykorzystaniem 
+komponentow ggplot2. 
+
+Czas na rozwiazanie - do 2021.04.30 23:59:59.
+tytul maila: PiWD/XXXXX/zadanie_04.r, gdzie XXXXX - numer albumu
+Zadanie w formie skryptu zadanie_04.r (rozwiniecie tego skryptu)
+email: mkozak3@sgh.waw.pl lub mariusz.kozakiewicz@sgh.waw.pl
