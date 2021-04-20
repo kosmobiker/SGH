@@ -1,3 +1,5 @@
+rm(list=ls())
+
 getNBPData <- function(year=2021){
     
   ret <- data.frame()
@@ -52,26 +54,49 @@ getNBPData <- function(year=2021){
 
 }
 #--------------------------------------
-ret <- getNBPData(2017)
+ret <- getNBPData(2015)
 ret <- ret[,grep("data|EUR|USD|GBP",colnames(ret))] 
-
+ret$data <- as.Date(ret$data)
 #print(head(ret))
 #print(tail(ret))
 
+colors <- c("USD" = "darkgreen", "EUR" = "blue", "GBP" = "red")
+img <- (ggplot(data=ret, aes(x=data)) +
+          geom_line(aes(y=`1USD`, color = "USD"), size=1) +
+          geom_line(aes(y=`1EUR`, color = "EUR"), size=1) +
+          geom_line(aes(y=`1GBP`, color = "GBP"), size=1) + 
+          ggtitle("Wykresy kursów walut") +
+          labs(x = "Data",y = "PLN", color = "Waluty") +
+          scale_color_manual(values = colors)
+      )          
+x11()
+print(img)
 
-# img <- (
-#   ggplot(ret,...)
-#   
-# )
-# x11()
-# print(img)
+
+wykres1 <- (ggplot(data=ret, aes(x=data)) +
+                    geom_line(aes(y=`1USD`, color = "USD"), size=1) +
+              ggtitle("Wykresy kursów walut") +
+              labs(x = "Data",y = "PLN", color = "Waluta") +
+              scale_color_manual(values = colors))
+wykres2 <- (ggplot(data=ret, aes(x=data)) +
+              geom_line(aes(y=`1EUR`, color = "EUR"), size=1) +
+              labs(x = "Data",y = "PLN", color = "Waluta") +
+              scale_color_manual(values = colors))
+wykres3 <- (ggplot(data=ret, aes(x=data)) +
+              geom_line(aes(y=`1GBP`, color = "GBP"), size=1) +
+              labs(x = "Data",y = "PLN", color = "Waluta") +
+              scale_color_manual(values = colors))
+
+x11()
+grid.arrange(wykres1, wykres2,wykres3, nrow = 3)
+
 
 # Zadanie za 2 pkt.
 # Korzystajac z grupowania danych dostepnego w ggplot, wykonac dwa wykresy szeregow czasowych
 # kursow EUR, USD, GPB wzgledem PLN. Wykres pierwszy powinien posiadac legende, podpisane osie i tytul.
 # Powinien byc wykresem zbiorczym - w ramach jednego ukladu wspolrzednych.
-# Wykres drugi powiniem przedstawiac kursy walut w ramach trzech osobnych ukladow wspolrzednych o 
-# dobranych dla kursow osiach OY. 
+# Wykres drugi powiniem przedstawiac kursy walut w ramach trzech osobnych ukladow wspolrzednych o
+# dobranych dla kursow osiach OY.
 # Wykresy powinien generowac sie takze dla danych z innych lat (od 2013 do 2021).
 # Czas na rozwiazanie - do 2021.04.30 23:59:59.
 # tytul maila: PiWD/XXXXX/zadanie_03.r, gdzie XXXXX - numer albumu
