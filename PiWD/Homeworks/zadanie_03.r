@@ -1,4 +1,6 @@
 rm(list=ls())
+library(ggplot2)
+library(gridExtra)
 
 getNBPData <- function(year=2021){
     
@@ -72,7 +74,7 @@ img <- (ggplot(data=ret, aes(x=data)) +
 x11()
 print(img)
 
-
+#--------------------------------------
 wykres1 <- (ggplot(data=ret, aes(x=data)) +
                     geom_line(aes(y=`1USD`, color = "USD"), size=1) +
               ggtitle("Wykresy kursów walut") +
