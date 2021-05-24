@@ -2,21 +2,26 @@
   ? html_document
 -->
   
-  ---
-  title:  "rmarkdown demo"
-author: "SGH"
-date:   "2021-04-22" #"`r Sys.Date()`"
-output:
-  html_document: 
-  #    toc: TRUE
-  word_document: default
-pdf_document: default
+---
+title:  "Zadanie_05"
+author: "Uladzislau Darhevich"
+date:   "`r Sys.Date()`"
+output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Spis treści
+Raport zawiera:
 
 
-
-
+* tytuł, autora, date wykonania
+* wykres kursow USD, EUR, GBP
+  + Wykres zawiera dane za ostatnie 7 dni
+  + Wykres znajduje sie w osobnym rozdziale raportu
+  
+```{r , echo=FALSE, results='hide', include=FALSE}
 getNBPData <- function(year=2021){
     
   ret <- data.frame()
@@ -70,43 +75,31 @@ getNBPData <- function(year=2021){
   return(ret)
 
 }
-#--------------------------------------
+```
+
+
+```{r, echo=FALSE}
+
 ret <- getNBPData(2021)
 ret <- ret[,grep("data|EUR|USD|GBP",colnames(ret))] 
 ret$data <- as.Date(ret$data)
 ret<- tail(ret,7)
-
-
 
 colors <- c("USD" = "darkgreen", "EUR" = "blue", "GBP" = "red")
 img <- (ggplot(data=ret, aes(x=data)) +
           geom_line(aes(y=`1USD`, color = "USD"), size=1) +
           geom_line(aes(y=`1EUR`, color = "EUR"), size=1) +
           geom_line(aes(y=`1GBP`, color = "GBP"), size=1) + 
-          ggtitle("Wykresy kurs?w walut") +
+          ggtitle("Wykresy kursów walut") +
           labs(x = "Data",y = "PLN", color = "Waluty") +
           scale_color_manual(values = colors)
 )          
 x11()
 print(img)
-
-#print(head(ret))
-#print(tail(ret))
-
-# Zadanie za 2 pkt.
-# Napisac raport zadanie_05.Rmd, ktory:
-# -- bedzie mial tytul, autora, date wykonania,
-# -- bedzie zawieral wykres kursow USD, EUR, GBP. Wykres ma zawierac dane za ostatnie 7 dni!!! Wykres ma znajdowac sie w osobnym rozdziale raportu,
-# -- bedzie zawieral tabele z notowaniami tych trzech kursow walut. Tabelka ma zawierac sie w osobnym rozdziale raportu.
-
-# Czas na rozwiazanie - do 2021.05.28 23:59:59.
-# tytul maila: PiWD/XXXXX/zadanie_05, gdzie XXXXX - numer albumu
-# Zadanie w formie skryptu zadanie_05.Rmd
-# email: mkozak3@sgh.waw.pl
+```
 
 
-
-
-
-
-                                                                                    
+```{r , echo=FALSE, results="asis"}
+library(knitr)
+kable(ret, caption="Kursy walut")
+```
