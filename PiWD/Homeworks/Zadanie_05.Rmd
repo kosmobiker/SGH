@@ -1,11 +1,8 @@
-<!--
-  ? html_document
--->
-  
+
 ---
-title:  "Zadanie_05"
+title: "Zadanie_05"
 author: "Uladzislau Darhevich"
-date:   "`r Sys.Date()`"
+date: "`r Sys.Date()`"
 output: html_document
 ---
 
@@ -15,13 +12,20 @@ knitr::opts_chunk$set(echo = TRUE)
 # Spis treści
 Raport zawiera:
 
-
 * tytuł, autora, date wykonania
 * wykres kursow USD, EUR, GBP
   + Wykres zawiera dane za ostatnie 7 dni
   + Wykres znajduje sie w osobnym rozdziale raportu
   
 ```{r , echo=FALSE, results='hide', include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(patchwork)
+library(knitr)
+library(ggplot2)
+library(grid)
+library(ggpubr)
+library(ggeasy)
 getNBPData <- function(year=2021){
     
   ret <- data.frame()
@@ -77,29 +81,30 @@ getNBPData <- function(year=2021){
 }
 ```
 
-
+# Rozdział 1. Wykres kursów USD, EUR, GBP
 ```{r, echo=FALSE}
 
 ret <- getNBPData(2021)
 ret <- ret[,grep("data|EUR|USD|GBP",colnames(ret))] 
 ret$data <- as.Date(ret$data)
 ret<- tail(ret,7)
-
 colors <- c("USD" = "darkgreen", "EUR" = "blue", "GBP" = "red")
+```
+
+```{r, echo=FALSE}
 img <- (ggplot(data=ret, aes(x=data)) +
-          geom_line(aes(y=`1USD`, color = "USD"), size=1) +
-          geom_line(aes(y=`1EUR`, color = "EUR"), size=1) +
-          geom_line(aes(y=`1GBP`, color = "GBP"), size=1) + 
+          geom_line(aes(y=`1USD`, color = "USD"), size=1.5) +
+          geom_line(aes(y=`1EUR`, color = "EUR"), size=1.5) +
+          geom_line(aes(y=`1GBP`, color = "GBP"), size=1.5) + 
           ggtitle("Wykresy kursów walut") +
           labs(x = "Data",y = "PLN", color = "Waluty") +
           scale_color_manual(values = colors)
 )          
-x11()
 print(img)
 ```
 
-
+# Rozdział 2. Tabela z notowaniami kursow USD, EUR, GBP
 ```{r , echo=FALSE, results="asis"}
-library(knitr)
-kable(ret, caption="Kursy walut")
+rownames(ret) <- ret$Data
+kable(ret, caption="Kursy walut za ostatnie 7 dni")
 ```

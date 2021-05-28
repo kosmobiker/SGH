@@ -1,21 +1,3 @@
-<!--
-  ? html_document
--->
-  
-  ---
-  title:  "rmarkdown demo"
-author: "SGH"
-date:   "2021-04-22" #"`r Sys.Date()`"
-output:
-  html_document: 
-  #    toc: TRUE
-  word_document: default
-pdf_document: default
----
-
-
-
-
 
 getNBPData <- function(year=2021){
     
