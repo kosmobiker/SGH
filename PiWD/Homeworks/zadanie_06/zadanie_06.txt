@@ -1,0 +1,12 @@
+# Zadanie za 2 pkt
+# 
+# Doposazyc aplikacje 04_shiny_googleVis_grypa w 
+# - mapke Polski w podziale na wojewodztwa
+# - liczniki z wartosciami odpowiednimi dla poszczegolnych wojewodztw
+# Wykresy z wykorzystaniem googleVis; aktywne po wybirze roku danych. 
+# 
+# Czas na rozwiazanie - do 2021.06.10 23:59:59.
+# tytul maila: PiWD/XXXXX/zadanie_06, gdzie XXXXX - numer albumu
+# Zadanie w formie skryptu zadanie_06.zip
+# email: mkozak3@sgh.waw.pl
+# 

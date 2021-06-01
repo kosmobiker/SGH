@@ -13,6 +13,18 @@ select e.last_name, e.salary, jg.grade_level
 from employees e 
 join job_grades jg on e.salary between jg.lowest_sal and jg.highest_sal;
 
+--7.
+SELECT e.last_name, e.salary, grades.grade_level
+from employees e, job_grades grades
+WHERE grades.grade_level = 'B' AND
+e.salary between grades.lowest_sal and grades.highest_sal AND
+e.job_id LIKE '%CLERK%'
+
+--8. Kto z departamentu Shipping pracuje dіużej niż 19 lat?
+select e.last_name, e.hire_date, round(months_between(sysdate, e.hire_date)/12, 2)
+from employees e, departments d
+where (e.department_id=d.department_id) and (d.department_name= 'Shipping') and (months_between(sysdate, e.hire_date)/12) >19
+
 ---PODZAPYTANIA
 
 --1.Pokaż nazwiska, daty zatrudnienia pracowników, którzy pracują w tym samym departamentcie co Zlotkey.

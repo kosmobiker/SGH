@@ -52,6 +52,17 @@ getNBPData <- function(year=2019){
 
 }
 #--------------------------------------
-ret <- getNBPData(2020)
-  
-                                                                                                    
+# ret <- getNBPData(2020)
+first_year = 2014
+last_year = 2021
+cur1 = "USD"
+cur2 = "CHF"
+data_str = paste("data|", cur1, "|", cur2, sep='')
+
+total <- data.frame()
+for (year in seq(first_year, last_year)){
+  ret <- getNBPData(year)
+  ret <- ret[,grep(data_str,colnames(ret))]
+  total <- rbind(total, ret)
+}                                                                                                    
+

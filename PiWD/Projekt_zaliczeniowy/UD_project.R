@@ -1,75 +1,68 @@
 rm(list=ls())
 library(shiny)
-#library(shinyWidgets)
+library(shinyWidgets)
 library(data.table)
 library(googleVis)
-#library(tidyverse)
+library(tidyverse)
 library(ggplot2)
 library(plotly)
 library(scales)
 library(reshape2)
-#library(shinythemes)
-#library(lmtest)
+library(shinythemes)
+library(lmtest)
 library(rmarkdown)
 library(knitr)
 library(pander)
-library(DT)
 
-for(i in 2013:2021){
+#funkcja do pobrania danych
+getNBPData <- function(year=2021){
   
-  getNBPData <- function(year=i){
+  ret <- data.frame()
+  
+  if(year>=2013){
     
-    ret <- data.frame()
+    fileName <- paste0(year,"_NBP_data.csv")
     
-    if(year>=2013){
-      
-      fileName <- paste0(year,"_NBP_data.csv")
-      
-      try({
-        if(file.exists(fileName)){
-          if(as.Date(file.info(fileName)$mtime)==Sys.Date()){
-            cat(paste("Reading data from local file\n"))
-            return(read.table(file=fileName,sep=";",dec=",",header=T,stringsAsFactor=F))
-          }
+    try({
+      if(file.exists(fileName)){
+        if(as.Date(file.info(fileName)$mtime)==Sys.Date()){
+          cat(paste("Reading data from local file\n"))
+          ret<-read.table(file=fileName,sep=";",dec=",",header=T,stringsAsFactor=F)
+          colnames(ret) <- gsub("X","",colnames(ret))
+          return(ret)
         }
-      })
-      
-      cat(paste("Downloading data\n"))
-      
-      res <- try({
-        
-        d <- readLines(paste0("https://www.nbp.pl/kursy/Archiwum/archiwum_tab_a_",year,".csv"))
-        d <- d[-2]
-        d <- d[-c((length(d)-3):length(d))]
-        tmpColnames <- strsplit(d[1],";",useBytes=T)[[1]]
-        tmpColnames <- tmpColnames[-c((length(tmpColnames)-1):length(tmpColnames))]
-        d <- do.call("rbind",
-                     lapply(strsplit(d[-1],";"),
-                            function(x){
-                              matrix(as.numeric(gsub(",",".",x[-c((length(x)-1):length(x))])),nrow=1)
-                            })
-        )
-        colnames(d) <- tmpColnames
-        d <- as.data.frame(d)
-        
-        d$data <- as.Date(as.character(d$data),format="%Y%m%d")
-        ret <- d
-        write.table(ret,file=fileName,sep=";",dec=",",row.names=F)
-        
-      },silent=T)
-      
-      if(inherits(res,"try-error")){
-        cat(paste("An error occurred while downloading data!!!\n")) 
       }
+    })
+    
+    cat(paste("Downloading data\n"))
+    
+    res <- try({
       
+      d <- readLines(paste0("https://www.nbp.pl/kursy/Archiwum/archiwum_tab_a_",year,".csv"))
+      d <- d[-2]
+      d <- d[-c((length(d)-3):length(d))]
+      tmpColnames <- strsplit(d[1],";",useBytes=T)[[1]]
+      tmpColnames <- tmpColnames[-c((length(tmpColnames)-1):length(tmpColnames))]
+      d <- do.call("rbind",
+                   lapply(strsplit(d[-1],";"),
+                          function(x){
+                            matrix(as.numeric(gsub(",",".",x[-c((length(x)-1):length(x))])),nrow=1)
+                          })
+      )
+      colnames(d) <- tmpColnames
+      d <- as.data.frame(d)
       
+      d$data <- as.Date(as.character(d$data),format="%Y%m%d")
+      ret <- d
+      write.table(ret,file=fileName,sep=";",dec=",",row.names=F)
+      
+    },silent=T)
+    
+    if(inherits(res,"try-error")){
+      cat(paste("An error occurred while downloading data!!!\n")) 
     }
-    
-    return(ret)
-    
   }
-  
-  getNBPData(i)
+  return(ret)
 }
 
 # UI ##################################
@@ -79,22 +72,25 @@ button_ui <- function(id) {
 
 ui <- fluidPage(
   
-  titlePanel("Kursy walut - projekt"),
+  titlePanel("Uladzislau Darhevich - projekt"),
   
   sidebarLayout(
     
     sidebarPanel(
       
-      fileInput("fileInPath", 
-                label= h4("Wybierz rok:")
+      selectInput("selectFirstYear",
+                  label = "Od",
+                  choices = as.vector(as.character(2021:2010),mode="list")
       ),
-      
-      
+      selectInput("selectLastYear",
+                  label = "Do",
+                  choices = as.vector(as.character(2021:2010),mode="list")
+      ),
       
       pickerInput(
         "choice1",
         "Pierwsza waluta:",
-        multiple = TRUE,
+        multiple = FALSE,
         choices = as.vector(sort(c("USD", "TBH", "USD", "AUD", "HKD",	"CAD",	"NZD",	"SGD", "HUF",	
                                    "CHF",	"UAH", "JPY",	"CZK",	"DKK", "ISK",	"NOK", "SEK", "HRK",	
                                    "RON",	"BGN", "TRY",	"ILS", "CLP",	"PHP", "MXN",	"ZAR", "BRL",
@@ -104,13 +100,16 @@ ui <- fluidPage(
       pickerInput(
         "choice2",
         "Druga waluta:",
-        multiple = TRUE,
+        multiple = FALSE,
         choices = as.vector(sort(c("USD", "TBH", "USD", "AUD", "HKD",	"CAD",	"NZD",	"SGD", "HUF",	
                                    "CHF",	"UAH", "JPY",	"CZK",	"DKK", "ISK",	"NOK", "SEK", "HRK",	
                                    "RON",	"BGN", "TRY",	"ILS", "CLP",	"PHP", "MXN",	"ZAR", "BRL",
                                    "MYR",	"RUB", "IDR", "INR", "KRW",	"CNY", "GBP", "EUR", "PLN", "XDR")),mode="list"),
         selected = "  "
       ),
+      
+      actionButton("getDataFromServer", "Pobierz dane z serwera"),
+      
       actionButton("report","Wygeneruj raport")
     ),
     
@@ -127,9 +126,7 @@ ui <- fluidPage(
                            verbatimTextOutput("test"),plotlyOutput("trend"))
       )
       
-      
     )
-    
     
   )
   
@@ -146,28 +143,37 @@ button_server <- function(id) {
 server <- function(input, output) {
   
   outVar <- reactiveValues(
-    selectCurrencyVar = df
+    selectFirstYearVar = "2013"
   )
   
-  v <- reactiveValues(dataLoadDownload = FALSE)
+  outVar <- reactiveValues(
+    selectLastYearVar = "2021"
+  )
   
-  observeEvent(input$getDataFromServer,{
-    v$dataLoadDownload <- !v$dataLoadDownload
+
+  observeEvent(input$selectFirstYear,{
+    outVar$selectFirstYearVar <- input$selectFirstYear
   })
+
   
-  button <- button_server("btn1")
+  observeEvent(input$selectLastYear,{
+    outVar$selectLastYearVar <- input$selectLastYear
+  })
   
   # dane do tabeli i wykresow
   inputdata <- reactive({
     
-    try({
-      return(
-        read.table(file=input$fileInPath$datapath,sep=";",dec=",",header=TRUE,stringsAsFactors=FALSE)
-        
-      )
-    },silent=T)
+    cur1 = "USD"
+    cur2 = "CHF"
+    data_str = paste("data|", cur1, "|", cur2, sep='')
     
-    return(dane)
+    total <- data.frame()
+    for (year in seq(selectFirstYearVar, selectLastYearVar)){
+      ret <- getNBPData(year)
+      ret <- ret[,grep(data_str,colnames(ret))]
+      total <- rbind(total, ret)
+    } 
+    return(total)
   })
   
   # dane do mapki
@@ -324,9 +330,9 @@ server <- function(input, output) {
     
     save(params,file="params")
     
-    #library(knitr)
-   # library(markdown) 
-    #library(rmarkdown)
+    library(knitr)
+    library(markdown) 
+    library(rmarkdown)
     
     knit(input='Generator.Rmd', output="tmp.md",envir=new.env())
     markdownToHTML(file="tmp.md", output="Raport.html")
@@ -341,4 +347,3 @@ server <- function(input, output) {
 
 # URUCHOMIENIE #######################
 shinyApp(ui = ui, server = server)
-
