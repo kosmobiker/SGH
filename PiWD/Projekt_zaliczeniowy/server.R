@@ -1,7 +1,12 @@
 library(shiny)
-library(ggplot2)
-# 17 - biblioteka plotly 
+library(dplyr)
+library(countrycode)
+library(googleVis)
 library(plotly)
+library(lmtest)
+library(rmarkdown)
+library(knitr)
+library(markdown) 
 
 #funkcja do pobrania csv plikóW
 getNBPData <- function(year=2021){
@@ -56,7 +61,7 @@ getNBPData <- function(year=2021){
 
 # czesc obliczeniowa
 shinyServer(function(input, output) {
-  
+  #first year
   outVar <- reactiveValues(
     selectFirstYearVar = "2021"
   )
@@ -65,7 +70,7 @@ shinyServer(function(input, output) {
     outVar$selectFirstYearVar <- input$selectFirstYear
   })
   
-  
+  #last year
   outVar <- reactiveValues(
     selectLastYearVar = "2021"
   )
@@ -73,16 +78,16 @@ shinyServer(function(input, output) {
   observeEvent(input$selectLastYear,{
     outVar$selectLastYearVar <- input$selectLastYear
   })
-  
+
   outVar <- reactiveValues(
     selectCurrency = "USD"
   )
-  
+
   observeEvent(input$selectCurrency,{
     outVar$selectCurrencyVar <- input$selectCurrency
   })
   
-  # 11. akcja przycisku 
+  #read the data
   dataIn <- reactive({
 
       data_str = paste("data|", outVar$selectCurrencyVar[1], "|", outVar$selectCurrencyVar[2], sep='')
@@ -98,8 +103,6 @@ shinyServer(function(input, output) {
 })  
   
   
-  
-  
   output$dataSample <- DT::renderDataTable({
     DT::datatable(  
       dataIn(), 
@@ -110,17 +113,8 @@ shinyServer(function(input, output) {
         lengthMenu = seq(from=10,by=10,to=100) 
       )
     )
+  
+    
   })
   
-  
-  
-  output$plainText1 <- renderPrint({
-    return(outVar$selectFirstYearVar)
-  })
-  output$plainText2 <- renderPrint({
-    return(outVar$selectLastYearVar)
-  })
-  output$plainText3 <- renderPrint({
-    return(outVar$selectCurrencyVar)
-  })
 })
