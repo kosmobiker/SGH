@@ -1,0 +1,6 @@
+id,name,age,job,marital,education,default,housing,loan
+e3e00fed-8856-449b-868e-6ad8d0150a10,Grzegorz Brzeczyszczykiewicz,33,entrepreneur,married,'high.school,yes,yes,no
+dedbe844-72f3-4170-84de-b0e1c886e14c,Jan Kowalski,55,entrepreneur,divorced,'high.school,no,yes,no
+ea047ac1-5c7d-4185-8c84-a5cc308d2417,Jane Doe,28,management,divorced,'university.degree,no,yes,yes
+f69fa03e-55b1-4983-a994-75d25eed20ef,Karol Duda,30,entrepreneur,married,high.school,no,no,no
+f4ba6c1c-7d34-42b6-9925-fd523d31b2c9,Peter Green,45,entrepreneur,divorced,university.degree,no,yes,no

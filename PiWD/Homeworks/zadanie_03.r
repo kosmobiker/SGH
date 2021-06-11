@@ -1,6 +1,8 @@
 rm(list=ls())
 library(ggplot2)
 library(gridExtra)
+library(plotly)
+
 
 getNBPData <- function(year=2021){
     
@@ -67,17 +69,18 @@ img <- (ggplot(data=ret, aes(x=data)) +
           geom_line(aes(y=`1USD`, color = "USD"), size=1) +
           geom_line(aes(y=`1EUR`, color = "EUR"), size=1) +
           geom_line(aes(y=`1GBP`, color = "GBP"), size=1) + 
-          ggtitle("Wykresy kursów walut") +
+          ggtitle("Wykresy kursÃ³w walut") +
           labs(x = "Data",y = "PLN", color = "Waluty") +
           scale_color_manual(values = colors)
       )          
 x11()
 print(img)
-
+f <- ggplotly(img)
+print(f)
 #--------------------------------------
 wykres1 <- (ggplot(data=ret, aes(x=data)) +
                     geom_line(aes(y=`1USD`, color = "USD"), size=1) +
-              ggtitle("Wykresy kursów walut") +
+              ggtitle("Wykresy kurs?w walut") +
               labs(x = "Data",y = "PLN", color = "Waluta") +
               scale_color_manual(values = colors))
 wykres2 <- (ggplot(data=ret, aes(x=data)) +

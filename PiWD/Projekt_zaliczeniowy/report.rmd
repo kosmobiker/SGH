@@ -1,0 +1,133 @@
+---
+title: "PiWD - Projekt zaliczeniowy"
+author: "Uladzislau Darhevich"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r , echo=F, results='asis', cache=TRUE}
+library(shiny)
+library(shinyWidgets)
+library(data.table)
+library(googleVis)
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+library(scales)
+library(reshape2)
+library(shinythemes)
+library(lmtest)
+library(rmarkdown)
+library(knitr)
+library(pander)
+params <- get(load("params"))
+```
+
+# Mapa
+
+```{r , echo=FALSE, results='asis', cache=TRUE, warning=FALSE, message=FALSE}
+img<- gvisGeoChart(mapIn(), locationvar="Country", hovervar="Currency",
+                  options=list(
+                  width=600, 
+                  height=400))
+                                  
+print(img, "chart")
+
+```
+# Szereg czasowy
+
+```{r , echo=F, results='asis'}
+plot.data <- melt(dataIn(), id.vars = "data")
+plot.data$waluty <- substr(plot.data$variable,
+                           nchar(as.vector(plot.data$variable)) - 3 + 1,
+                           nchar(as.vector(plot.data$variable)))
+plot.data <- plot.data[plot.data$waluty %in% c(outVar$selectCurrencyVar[1], outVar$selectCurrencyVar[2]),]
+plot.data$data <- as.Date(plot.data$data)
+img <- ggplot(plot.data) + geom_line(mapping = aes(x = data, y = value,
+                                  colour = waluty, group = waluty), size=1)+
+                                  scale_x_date(date_labels = "%B") +
+                                  ylab("PLN") + 
+                                  xlab("Data")
+plot(img)
+
+```
+# Scatterplot
+
+```{r , echo=F, results='asis'}
+
+plot.data <- melt(dataIn(), id.vars = "data")
+plot.data$Waluty <- substr(plot.data$variable, 
+                           nchar(as.vector(plot.data$variable)) - 3 + 1,
+                           nchar(as.vector(plot.data$variable)))
+plot.data <- dcast(plot.data, data~Waluty)
+img <- ggplot(plot.data) + 
+        geom_point(mapping = aes(x = plot.data[, outVar$selectCurrencyVar[1]], 
+                                  y = plot.data[, outVar$selectCurrencyVar[2]], 
+                                  size=0.2), color = "orange") +
+                                  xlab(outVar$selectCurrencyVar[1]) + 
+                                  ylab(outVar$selectCurrencyVar[2])
+plot(img)
+
+```
+# Histogram różnic kursów
+
+```{r , echo=F, results='asis'}
+
+plot.data <- melt(dataIn(), id.vars = "data")
+plot.data$Waluty <- substr(plot.data$variable, 
+                           nchar(as.vector(plot.data$variable)) - 3 + 1,
+                           nchar(as.vector(plot.data$variable)))
+plot.data <- plot.data[plot.data$Waluty %in% c(outVar$selectCurrencyVar[1],outVar$selectCurrencyVar[2]), ]
+plot.data1 <- plot.data[plot.data$Waluty %in% outVar$selectCurrencyVar[1], ]
+plot.data2 <- plot.data[plot.data$Waluty %in% outVar$selectCurrencyVar[2], ]
+plot.data$delta <- plot.data1$value-plot.data2$value
+img <- ggplot(plot.data) + geom_histogram(aes(x = delta), col="darkgreen", fill="darkgreen", size=0.3) +
+                                  xlab("Roznica kursów") +
+                                  ylab("Czestosci")
+plot(img)
+
+```
+# Regresja
+
+```{r , echo=F, results='asis'}
+
+plot.data <- melt(dataIn(), id.vars = "data")
+plot.data$Waluty <- substr(plot.data$variable, 
+                           nchar(as.vector(plot.data$variable)) - 3 + 1,
+                           nchar(as.vector(plot.data$variable)))
+plot.data <- dcast(plot.data, data~Waluty)
+regresja <- lm(plot.data[,outVar$selectCurrencyVar[1]]~plot.data[,outVar$selectCurrencyVar[2]])
+names(regresja$coefficients) <- c("Intercept", outVar$selectCurrencyVar[2])
+summary(regresja)
+```
+
+```{r , echo=F, results='asis'}
+
+plot.data <- melt(dataIn(), id.vars = "data")
+plot.data$Waluty <- substr(plot.data$variable, 
+                           nchar(as.vector(plot.data$variable)) - 3 + 1,
+                           nchar(as.vector(plot.data$variable)))
+plot.data <- dcast(plot.data, data~Waluty)
+regresja <- lm(plot.data[, outVar$selectCurrencyVar[1]]~plot.data[,outVar$selectCurrencyVar[2]])
+raintest(regresja)
+```
+
+```{r , echo=F, results='asis'}
+
+plot.data <- melt(dataIn(), id.vars = "data")
+plot.data$Waluty <- substr(plot.data$variable, 
+                           nchar(as.vector(plot.data$variable)) - 3 + 1,
+                           nchar(as.vector(plot.data$variable)))
+plot.data <- dcast(plot.data, data~Waluty)
+img <- ggplot(plot.data, aes(x = plot.data[, outVar$selectCurrencyVar[2]], 
+                                 y = plot.data[, outVar$selectCurrencyVar[1]])) +
+            geom_point(colour="green") +
+            stat_smooth(method = "lm", colour="red")+
+            ylab(outVar$selectCurrencyVar[1]) +
+            xlab(outVar$selectCurrencyVar[2])
+print(img)
+
+```
+
+
+

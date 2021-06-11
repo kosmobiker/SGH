@@ -4,14 +4,39 @@ proc import
 		out=serce 
 		replace;
 
-*Model regresji log. wersja minimumn;
-proc logistic data=serce;
-	model output(event="1") = age sex cp trtbps chol fbs restecg thalachh exng oldpeak slp caa thall;
+proc contents data=serce;
 run;
 
-*Sprawdzanie dominanty;
-proc freq data=serce;
-	table thall;
+proc freq data=serce; 
+	table output; 
+run;
+
+title "sex vs output";
+proc sgplot data=serce pctlevel=group;
+vbar sex / group=output stat=percent missing;
+label sex = "1 : men,  0 : women";
+run;
+
+title "Analysis of Chest Pain";
+proc sgplot data=serce;
+vbar cp / datalabel missing;
+label cp = "Value 1: typical angina Value 2: atypical angina Value 3: non-anginal pain Value 4: asymptomatic";
+run;
+
+/* Checking the missing value and Statistics of the dataset */
+proc means data=serce 
+	N Nmiss mean std min P1 P5 P10 P25 P50 P75 P90 P95 P99 max;
+run;
+
+/* Splitting the dataset into traning and validation using 70:30 ratio */
+proc surveyselect data = serce out = train_survey outall
+samprate = 0.7 seed = 12345;
+strata output;
+run;
+
+proc freq data = train_survey;
+tables Selected*output;
+run;
 
 *Model regresji z zmiennymi jakościowymi;
 proc logistic data=serce;
@@ -19,11 +44,12 @@ proc logistic data=serce;
 	model output(event="1") = age sex cp trtbps chol fbs restecg thalachh exng oldpeak slp caa thall;
 run;
 
+
 ods graphics on;
 proc logistic data=serce plots=oddsratio outmodel=model1;
-	class sex(ref="0") cp fbs restecg exng(ref="0") thall(ref="3") / param = reference;
+	class sex(ref="0") cp(ref='3') slp(ref='2') fbs restecg exng(ref="0") thall(ref="3") / param = reference;
 	model output(event="1") = age sex cp trtbps chol fbs restecg thalachh exng oldpeak slp caa thall
-	/ selection = stepwise;
+	/ selection = stepwise expb stb lackfit;
 run;
 ods graphics off;
 
