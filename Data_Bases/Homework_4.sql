@@ -73,9 +73,12 @@ where manager_id = (select employee_id from employees where last_name = 'King');
 select LAST_NAME, SALARY, JOB_ID, rank() over (order by salary desc) as ranking
 from employees;
 
-select LAST_NAME
+select *
 from employees
-where salary > (select max(salary) from employees where JOB_ID like '%MAN');
+where salary > any (select salary
+from employees
+where job_id like '%MAN')
+and job_id not like '%MAN
 
 --9. Kto z departamentu 90 był zatrudniony przed osobami pracującymi obecnie w departmencie 80?
 

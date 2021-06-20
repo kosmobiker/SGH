@@ -138,3 +138,10 @@ proc lifereg data=df plots=probplot;
 	inset dist confidence scale shape nobs; 
 run;
 ods graphics off;
+
+ods graphics on;
+proc logistic data=df plots=roc;
+class gender(ref="0") cvd(ref="0") / param = reference;
+model fstat= &my_nom_var &my_quant_var / selection = stepwise rsquare aggregate scale=none;;
+run;
+ods graphics off;

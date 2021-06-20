@@ -1,5 +1,6 @@
 /*import danych*/
-proc import out = imported datafile= "/shared/home/ud108519@student.sgh.waw.pl/SGH Projekt/life_expectancy.csv" 
+/*proc import out = imported datafile= "/shared/home/ud108519@student.sgh.waw.pl/SGH Projekt/life_expectancy.csv" */
+proc import out = imported datafile= "C:\Users\Vlad\Documents\SGH\data\data_lr\life_expectancy.csv"
             dbms=csv replace;
      getnames=yes;
 

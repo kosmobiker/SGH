@@ -1,6 +1,7 @@
 rm(list=ls())
 
 library('caret')
+library('gdata')
 
 #upload data
 data <- read.csv(
@@ -9,13 +10,15 @@ data <- read.csv(
         stringsAsFactors = F)
 
 
-set.seed(42)
+set.seed(12345)
+
+data <- unknownToNA(data, unknown='unknown')
 
 #split into two parts 75/25 
 #part_1 - train (60%) and validate (15%), part_2 - test (20%) and holdout(5%)
 ind = createDataPartition(data$y,
                           times = 1,
-                          p = 0.75,
+                          p = 0.95,
                           list = F)
 part_1 =data[ind, ]
 part_2 = data[-ind, ]
@@ -44,8 +47,8 @@ table(test_data$y)/dim(test_data)[1]
 table(holdout_data$y)/dim(holdout_data)[1]
 
 #create files
-write.csv(train_data, 'train_data.csv')
-write.csv(validate_data, 'validate_data.csv')
+write.csv(part_1, 'data_95_withNA.csv')
+write.csv(part_2, 'data_5_withNA.csv')
 write.csv(test_data, 'test_data.csv')
 write.csv(holdout_data, 'holdout_data.csv')
 

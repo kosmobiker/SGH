@@ -10,7 +10,7 @@ proc lifetest data=b.dane(where=(ranuni(123)<0.01 and product='css')) method=KM 
 run;
 ods graphics off;
 
-/*METODA TRADYCYJNA*/
+/*-----*/
 ods graphics on;
 proc lifetest data=b.dane(where=(ranuni(123)<0.01 and product='css')) method=LIFE alpha=0.05 plots=survival ;
 	time ttd * rc(0,1);
@@ -18,7 +18,7 @@ proc lifetest data=b.dane(where=(ranuni(123)<0.01 and product='css')) method=LIF
 run;
 ods graphics off;
 
-/*TABLE & WYKRES DO¯YCIA & PRZEDZIA£Y UFNOŒCI*/
+/*-----*/
 
 ods graphics on;
 proc lifetest data=b.dane(where=(ranuni(123)<0.01)) method=KM alpha=0.05 notable
