@@ -1,0 +1,11 @@
+id,name,age,job,marital,education,default,housing,loan,prediction
+70614949-552c-4760-ab75-0f4aa737030a,Rick Sanchez,79,retired,divorced,university.degree,no,yes,yes,1
+bbe009f9-0773-4f19-a1af-017d00bf3880,Morty Smith,14,unknown,single,school,false,false,false,0
+3392b40a-5c35-408c-881f-db785b06184f,Karol Duda,30,entrepreneur,married,high.school,no,no,no,0
+c52446fe-9e79-45f6-aba8-deffc32a0b23,Peter Green,45,entrepreneur,divorced,university.degree,no,yes,no,0
+868f5467-1821-426d-8e2f-245f3f9976ae,John Doe,28,management,single,university.degree,yes,yes,yes,0
+2d1e9f84-93a6-4897-acdf-d43d940235fd,John Rambo,74,retired,divorced,unknown,no,yes,yes,0
+381005c9-4306-43c3-be67-0f921e5c6829,Jan Kowalski,22,retired,divorced,unknown,no,no,yes,0
+69acb7e3-c3c3-4eb3-ad16-df3e440b7674,Adam Duda,88,entrepreneur,married,high.school,no,no,no,0
+5c60f017-5d2d-4da7-9fdc-e3f1716c905a,Benny Hill,80,retired,married,unknown,no,yes,no,1
+a7503191-5e94-4eab-beec-718f86faf7a0,Benny Hill,80,retired,married,unknown,no,yes,no,1
