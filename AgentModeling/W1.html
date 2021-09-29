@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Ubuntu'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Modelowanie Wieloagentowe
+
+# Zajęcia 1
+
+## Bogumił Kamiński
+
+
+---
+
+# Dlaczego modelowanie symulacyjne?
+
+Typy problemów analitycznych:
+
+- predykcja (którzy klienci kupią produkt?)
+- optymalizacja (jak zaplanować dostawy towarów do klientów?)
+- symulacja (jak zaprojektować węzeł "Świętokrzyska" w metrze warszawsim?)
+
+Analizy scenariuszowe:
+
+1. [Agent Based Model of Cross Media Reach of Advertising](https://link.springer.com/chapter/10.1007%2F978-3-030-61503-1_5)
+2. [Optimization of the cost of urban traffic through an online bidding platform for commuters](https://www.sciencedirect.com/science/article/pii/S2212012221000137)
+3. [On broadcasting time in the model of travelling agents](https://www.sciencedirect.com/science/article/abs/pii/S0166218X20305497?via%3Dihub)
+4. [Multiagent Routing Simulation with Partial Smart Vehicles Penetration](https://www.hindawi.com/journals/jat/2020/3152020/)
+5. [Binary driver-customer familiarity in service routing](https://www.sciencedirect.com/science/article/abs/pii/S0377221720302514?via%3Dihub)
+6. [Emergence of Small-World Networks in an Overlapping-Generations Model of Social Dynamics, Trust and Economic Performance](https://www.jasss.org/23/2/8.html)
+7. [Agent-Based Modelling of Viticulture Development in Emerging Markets: The Case of the Małopolska Region](https://www.jasss.org/21/3/6.html)
+
+---
+
+# Konfiguracja środowiska (1)
+
+Na tych zajęciach zakładamy pracę pod systemem operacyjnym Win10
+
+Silnie rekomendowane jest wykorzystanie własnego komputera (hasła, konfiguracja oprogramowania)
+
+Instalacja środowiska Julia:
+- Ze strony https://julialang.org/downloads/ pobierz aktualną wersję języka Julia
+- Zainstaluj
+- Dodaj `julia.exe` do ścieżki
+- Uruchom Windows PowerShell
+- Uruchom interpreter Julia (tzw. REPL)
+- `exit()` kończy pracę z interpreterem
+
+---
+
+# Konfiguracja środowiska (2)
+
+Instalacja git:
+- Ze strony https://git-scm.com/ pobierz `git`
+- Zainstaluj
+- Uruchom Windows PowerShell
+- Przeprowadź podstawową konfigurację `git`:
+```
+git config --global user.name "John Doe"
+git config --global user.email johndoe@example.com
+```
+
+Instalacja VS Code:
+- Ze strony https://code.visualstudio.com/ pobierz VisualStudio Code
+- Zainstaluj
+- Uruchom
+- Dodaj rozszerzenia:
+  1. Julia
+  2. Git Graph
+- Dobierz konfigurację rozszerzeń jaka Ci odpowiada
+
+---
+
+# Startujemy
+
+Podstawowe komendy:
+
+|komenda       | akcja                          |
+|--------------|--------------------------------|
+|`ALT-J ALT-O` | uruchom interpreter Julia      |
+|`ALT-ENTER`   | wykonaj bieżący fragment kodu  |
+|`CTRL-~`      | przejdź do interpretera Julia  |
+|`CTRL-1`      | przejdź do edytora             |
+
+Otwórz plik `asianoption.jl`
+
+---
+
+# Wycena opcji azjatyckiej: teoria
+
+- Aktywo ma cenę $X_0$ w momencie $0$, przez $X_t$ oznaczamy jego cenę w czasie $t$
+- Szukamy wartości opcji azjatyckiej zadanej następującą formułą
+
+$$
+E\left(e^{-rT}\max(\bar{X}-K,0)\right) \quad\text{gdzie}\quad \bar{X}=\frac{1}{T}\int_0^TX_t\,dt
+$$
+
+Metoda symulacji:
+- Podziel ores $[0,T]$ na $m$ okresów, gdzie $\Delta=T/m$
+- Przybliż $\bar{X}$ za pomocą wyrażenia $\hat{X}=\frac{1}{m}\sum_{i=1}^m$ $Y_i$, gdzie $Y_i$ jest wartością zmiennej $X_t$ w momencie czasu $t=i\Delta$.
+- W symulacji przyjmiemy, że $X_t$ jest generowane za pomocą geometrycznego ruchu Browna
+
+$$
+\frac{Y_{i+1}}{Y_i} = \exp\left(\left(r-\frac{\sigma^2}{2}\right)\Delta+\sigma\sqrt{\Delta}Z_i\right)\quad\text{gdzie}\quad Z_i\sim N(0,1)
+$$
+
+- Dla wyceny opcji obliczamy średnią z $n$ niealzeżnych realizacji zmiennej losowej $e^{-rT}\max\left(\hat{X}-K, 0\right)$
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script src='https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML' type="text/javascript"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+
+      // Setup MathJax
+      MathJax.Hub.Config({
+          tex2jax: {
+          inlineMath: [['$','$'], ['\\(','\\)']],
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+          }
+      });
+      MathJax.Hub.Queue(function() {
+          $(MathJax.Hub.getAllJax()).map(function(index, elem) {
+              return(elem.SourceElement());
+          }).parent().addClass('has-jax');
+      });
+
+      MathJax.Hub.Configured();
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
