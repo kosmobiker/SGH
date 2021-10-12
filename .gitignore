@@ -4,9 +4,14 @@
 # IPython
 profile_default/
 ipython_config.py
+*.csv
 
 # Remove previous ipynb_checkpoints
 git rm -r .ipynb_checkpoints/
+
+/PiWD/Projekt_zaliczeniowy/cache
+/PiWD/Projekt_zaliczeniowy/figure
+/PiWD/Projekt_zaliczeniowy/www
 
 /data
 /misc

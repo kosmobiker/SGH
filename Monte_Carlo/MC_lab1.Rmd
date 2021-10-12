@@ -1,0 +1,33 @@
+---
+title: "Symulacje Monte Carlo i Bootstraping w środowisku R (234240-D)"
+author: "Uladzislau Darhevich"
+date: "`r Sys.Date()`"
+email: 'ud108519@student.sgh.waw.pl'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# wczytaj dane (3 szeregi czasowe)
+
+Zbierzmy dane o cenach akcji dla niektórych tickerów (AMD, Intel, Qualcomm) za ostatnie 100 dni:
+
+```{r setup, include=FALSE}
+library(BatchGetSymbols)
+
+
+first.date <- Sys.Date() - 100
+last.date <- Sys.Date()
+freq.data <- 'daily'
+tickers <- c('AMD','INTC','QCOM')
+l.out <- BatchGetSymbols(tickers = tickers, 
+                         first.date = first.date,
+                         last.date = last.date, 
+                         freq.data = freq.data,
+                         cache.folder = file.path(tempdir(), 
+                                                  'BGS_Cache') ) # cache in tempdir()
+
+print(l.out$df.control)
+```
