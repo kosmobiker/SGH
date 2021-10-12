@@ -2,7 +2,6 @@
 title: "Symulacje Monte Carlo i Bootstraping w środowisku R (234240-D)"
 author: "Uladzislau Darhevich"
 date: "`r Sys.Date()`"
-email: 'ud108519@student.sgh.waw.pl'
 output: html_document
 ---
 
@@ -10,15 +9,28 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# wczytaj dane (3 szeregi czasowe)
+# 1. Wczytaj dane (3 szeregi czasowe)
 
-Zbierzmy dane o cenach akcji dla niektórych tickerów (AMD, Intel, Qualcomm) za ostatnie 100 dni:
+Zbierzmy dane o cenach akcji dla niektórych tickerów (AMD, Intel, Qualcomm) za ostatnie 1000 dni:
 
-```{r setup, include=FALSE}
+```{r , echo=FALSE, results='hide', include=FALSE}
+library(plotly)
+library(moments)
+library(dplyr)
+library(ggpubr)
 library(BatchGetSymbols)
+library(ggplot2)
+library(quantmod)
+library(tseries)
+library(TSstudio)
+library(tidyr)
+library(fitdistrplus)
+library(knitr)
+library(kableExtra)
+library(pander)
 
 
-first.date <- Sys.Date() - 100
+first.date <- Sys.Date() - 120
 last.date <- Sys.Date()
 freq.data <- 'daily'
 tickers <- c('AMD','INTC','QCOM')
@@ -28,6 +40,112 @@ l.out <- BatchGetSymbols(tickers = tickers,
                          freq.data = freq.data,
                          cache.folder = file.path(tempdir(), 
                                                   'BGS_Cache') ) # cache in tempdir()
-
-print(l.out$df.control)
+df <- l.out$df.tickers
 ```
+```{r, echo=FALSE}
+pander(l.out$df.control[,1:4], type = 'grid')
+```
+# 2. Stopa wzrotu dla  Adjusted Closing Price
+
+Stopa wzrotu już jest podana w zbiorze danych za pomocą `BatchGetSymbols`, ale też wyliczyłem samodzielnie
+```{r, echo=FALSE}
+res <- df %>% 
+        group_by(ticker) %>% 
+        dplyr::select(price.adjusted) %>% 
+        summarise(round(Delt(price.adjusted)*100, 2))
+df <- df[order(df$ticker), ]
+colnames(res) <- c("ticker", "calc_RoR")
+df <- cbind(df, calc_RoR = res$calc_RoR)
+pander(head(df, 10), type = 'grid')
+```
+# 3. Oblicz średnią, kurtozę, skośność, odchylenie standardowe
+
+```{r, echo=FALSE}
+statistics <- df %>% 
+        group_by(ticker) %>% 
+        dplyr::select(price.adjusted) %>% 
+        summarise(
+              Mean = median(price.adjusted),
+              Kurtosis = kurtosis(price.adjusted),
+              Skewness = skewness(price.adjusted),
+              Stds = sd(price.adjusted)
+              )
+pander(statistics, type = 'grid')
+```
+# 4. Zbadaj czy zmienne mają rozkład normalny
+
+p-value > 0,05 oznacza, że rozkład danych nie różni się znacząco od rozkładu normalnego. 
+Innymi słowy, możemy przyjąć normalność
+```{r, echo=FALSE}
+normality <- df %>%
+        group_by(ticker) %>%
+        summarise(
+                statistic = shapiro.test(price.adjusted)$statistic,
+                p.value = shapiro.test(price.adjusted)$p.value
+                )
+pander(normality, type = 'grid')
+```
+# 5. Zbadaj stacjonarność szeregu czasowego
+
+```{r, echo=FALSE}
+stationarity <- df %>%
+        group_by(ticker) %>%
+        summarise(
+                'Ljung-Box' = Box.test(price.adjusted, lag=22, type="Ljung-Box")$p.value,
+                'Dickey-Fuller' = adf.test(price.adjusted, alternative = "stationary")$p.value,
+                'KPSS' = kpss.test(price.adjusted)$p.value
+        )
+pander(stationarity, type = 'grid')
+```
+
+# 6. Narysuj wykres, histogram, wykres kwantyl-kwantyl
+
+```{r, echo=FALSE, plotly=TRUE}
+img1 <- ggplot(data = df, aes(x=ref.date, y=price.adjusted)) + 
+                        geom_line(aes(colour=ticker), size=1) +
+                        ggtitle("Adjusted closing prices") +
+                        labs(x = "Date",y = "USD", color = "Tickers")
+print(img1)
+
+img2 <- ggplot(data = df, aes(y=calc_RoR, fill=ticker), binwidth=2, size=0.3) + 
+                        geom_histogram(aes(colour=ticker)) + 
+                        facet_grid(ticker ~ .) + 
+                        coord_flip() +
+                        xlab("Counts") +
+                        ylab("Rates of return,%")
+print(img2)
+
+img3 <- ggplot(data = df, aes(sample=calc_RoR)) + 
+                        stat_qq(aes(colour=ticker))
+print(img3)
+```
+# 7. Oblicz obserwacje odstające powyżej 99 percentyla
+```{r, echo=FALSE}
+extravagante <- df %>%
+        group_by(ticker) %>%
+        filter(
+                price.adjusted >= quantile(price.adjusted, 0.99)
+        )
+pander(extravagante, type = 'grid')
+```
+# 8. Wyznacz korelacje między szeregami czasowymi
+
+Korelacjia pomiędzy adjusted closing price dla AMD oraz Intel:
+```{r, echo=FALSE}
+ts_df <- df %>%
+        dplyr::select(price.adjusted, ref.date, ticker) %>%
+        pivot_wider(names_from=ticker, values_from=price.adjusted)
+ggscatter(ts_df, x = "AMD", y = "INTC", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          color = 'orange', size = 4,
+          xlab = "Advanced Micro Devices", ylab = "Intel Corporation")
+```
+
+# 9. znajdź dopasowanie rozkładu t- Studenta do danych empirycznych
+```{r, echo=FALSE}
+# res <- fitdistr(ts_df$QCOM, "t", 
+#                 start = list(m=mean(ts_df$QCOM),
+#                 s=sd(ts_df$QCOM), 
+#                 df=3))
+# pander(res, type = 'grid')
