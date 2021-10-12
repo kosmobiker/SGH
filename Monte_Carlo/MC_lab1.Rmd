@@ -1,6 +1,7 @@
 ---
 title: "Symulacje Monte Carlo i Bootstraping w środowisku R (234240-D)"
 author: "Uladzislau Darhevich"
+email: "ud108519@student.sgh.waw.pl"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -11,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # 1. Wczytaj dane (3 szeregi czasowe)
 
-Zbierzmy dane o cenach akcji dla niektórych tickerów (AMD, Intel, Qualcomm) za ostatnie 1000 dni:
+Zbierzmy dane o cenach akcji dla niektórych tickerów (AMD, Intel, Qualcomm) za ostatnie 120 dni:
 
 ```{r , echo=FALSE, results='hide', include=FALSE}
 library(plotly)
@@ -60,6 +61,7 @@ pander(head(df, 10), type = 'grid')
 ```
 # 3. Oblicz średnią, kurtozę, skośność, odchylenie standardowe
 
+Statystyki są podane niżej:
 ```{r, echo=FALSE}
 statistics <- df %>% 
         group_by(ticker) %>% 
@@ -87,6 +89,7 @@ pander(normality, type = 'grid')
 ```
 # 5. Zbadaj stacjonarność szeregu czasowego
 
+Szeregi czasowe nie są stacjonarne
 ```{r, echo=FALSE}
 stationarity <- df %>%
         group_by(ticker) %>%
@@ -100,7 +103,7 @@ pander(stationarity, type = 'grid')
 
 # 6. Narysuj wykres, histogram, wykres kwantyl-kwantyl
 
-```{r, echo=FALSE, plotly=TRUE}
+```{r, echo=FALSE}
 img1 <- ggplot(data = df, aes(x=ref.date, y=price.adjusted)) + 
                         geom_line(aes(colour=ticker), size=1) +
                         ggtitle("Adjusted closing prices") +
@@ -119,7 +122,10 @@ img3 <- ggplot(data = df, aes(sample=calc_RoR)) +
                         stat_qq(aes(colour=ticker))
 print(img3)
 ```
+
 # 7. Oblicz obserwacje odstające powyżej 99 percentyla
+powyżej 99 percentyla znajdują się następne obserwacje:
+
 ```{r, echo=FALSE}
 extravagante <- df %>%
         group_by(ticker) %>%
@@ -143,9 +149,12 @@ ggscatter(ts_df, x = "AMD", y = "INTC",
 ```
 
 # 9. znajdź dopasowanie rozkładu t- Studenta do danych empirycznych
+
+Wyznajmy dopasowanie rozkładu t- Studenta dla adjusted closing price firmy AMD:
 ```{r, echo=FALSE}
-# res <- fitdistr(ts_df$QCOM, "t", 
-#                 start = list(m=mean(ts_df$QCOM),
-#                 s=sd(ts_df$QCOM), 
-#                 df=3))
-# pander(res, type = 'grid')
+res <- fitdistr(ts_df$AMD, "t",
+                start = list(m=mean(ts_df$AMD),
+                             s=sd(ts_df$AMD),
+                             df=3),
+                lower=c(-1, 0.001,1))
+pander(res, type = 'grid')
