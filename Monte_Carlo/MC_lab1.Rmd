@@ -1,5 +1,6 @@
 ---
 title: "Symulacje Monte Carlo i Bootstraping w środowisku R (234240-D)"
+subtitle: "Lab #1"
 author: "Uladzislau Darhevich"
 email: "ud108519@student.sgh.waw.pl"
 date: "`r Sys.Date()`"
@@ -46,9 +47,9 @@ df <- l.out$df.tickers
 ```{r, echo=FALSE}
 pander(l.out$df.control[,1:4], type = 'grid')
 ```
-# 2. Stopa wzrotu dla  Adjusted Closing Price
+# 2. Stopa wzrotu dla  skorygowanej ceny zamknięcia (Adjusted Closing Price)
 
-Stopa wzrotu już jest podana w zbiorze danych za pomocą `BatchGetSymbols`, ale też wyliczyłem samodzielnie
+Stopa wzrotu już jest podana w zbiorze danych za pomocą `BatchGetSymbols`, ale też obliczył ją samodzielnie
 ```{r, echo=FALSE}
 res <- df %>% 
         group_by(ticker) %>% 
@@ -89,7 +90,11 @@ pander(normality, type = 'grid')
 ```
 # 5. Zbadaj stacjonarność szeregu czasowego
 
-Szeregi czasowe nie są stacjonarne
++ Test Ljung-Box sprawdza, czy istnieją istotne dowody na niezerowe korelacje, z hipotezą zerową o niezależności w danym szeregu czasowym (sygnał niestacjonarny będzie miał niską wartość p).
++ Innym testem, który możemy przeprowadzić, jest test Dickey–Fullera (ADF), który ma sprawdzić, czy seria ma pierwiastek jednostkowy (seria z linią trendu będzie miała pierwiastek jednostkowy i spowoduje dużą wartość p).
++ Na koniec możemy sprawdzić, czy szeregi czasowe są stacjonarne na poziomie lub trendu za pomocą testu Kwiatkowskiego-Phillipsa-Schmidta-Shina (KPSS). Tutaj przetestujemy hipotezę zerową stacjonarności trendu (niska wartość p wskaże sygnał, który nie jest stacjonarny trendu, ma pierwiastek jednostkowy)
+
+**Szeregi czasowe nie są stacjonarne**
 ```{r, echo=FALSE}
 stationarity <- df %>%
         group_by(ticker) %>%
@@ -136,7 +141,7 @@ pander(extravagante, type = 'grid')
 ```
 # 8. Wyznacz korelacje między szeregami czasowymi
 
-Korelacjia pomiędzy adjusted closing price dla AMD oraz Intel:
+Korelacjia pomiędzy skorygowaną ceną zamknięcia dla AMD oraz Intel:
 ```{r, echo=FALSE}
 ts_df <- df %>%
         dplyr::select(price.adjusted, ref.date, ticker) %>%
@@ -150,11 +155,8 @@ ggscatter(ts_df, x = "AMD", y = "INTC",
 
 # 9. znajdź dopasowanie rozkładu t- Studenta do danych empirycznych
 
-Wyznajmy dopasowanie rozkładu t- Studenta dla adjusted closing price firmy AMD:
+Wyznajmy dopasowanie rozkładu t- Studenta dla skorygowanej ceny zamknięcia dla firmy Qualcomm:
 ```{r, echo=FALSE}
-res <- fitdistr(ts_df$AMD, "t",
-                start = list(m=mean(ts_df$AMD),
-                             s=sd(ts_df$AMD),
-                             df=3),
-                lower=c(-1, 0.001,1))
-pander(res, type = 'grid')
+fd <- fitdistr(ts_df$QCOM, "t", start = list(m=mean(ts_df$QCOM),s=sd(ts_df$QCOM), df=3), lower=c(-1, 0.001,1))
+pander(fd)
+```
