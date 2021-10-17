@@ -49,7 +49,7 @@ pander(l.out$df.control[,1:4], type = 'grid')
 ```
 # 2. Stopa wzrotu dla  skorygowanej ceny zamknięcia (Adjusted Closing Price)
 
-Stopa wzrotu już jest podana w zbiorze danych za pomocą `BatchGetSymbols`, ale też obliczył ją samodzielnie
+Stopa wzrotu już jest podana w zbiorze danych za pomocą `BatchGetSymbols`, ale też obliczyłem ją samodzielnie
 ```{r, echo=FALSE}
 res <- df %>% 
         group_by(ticker) %>% 
@@ -113,6 +113,7 @@ img1 <- ggplot(data = df, aes(x=ref.date, y=price.adjusted)) +
                         geom_line(aes(colour=ticker), size=1) +
                         ggtitle("Adjusted closing prices") +
                         labs(x = "Date",y = "USD", color = "Tickers")
+
 print(img1)
 
 img2 <- ggplot(data = df, aes(y=calc_RoR, fill=ticker), binwidth=2, size=0.3) + 
@@ -137,7 +138,7 @@ extravagante <- df %>%
         filter(
                 price.adjusted >= quantile(price.adjusted, 0.99)
         )
-pander(extravagante, type = 'grid')
+pander(extravagante[, 6:8], type = 'grid')
 ```
 # 8. Wyznacz korelacje między szeregami czasowymi
 
