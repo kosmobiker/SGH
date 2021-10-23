@@ -13,3 +13,4 @@ List of subjects:
 7. Data bases (Wódz)
 8. Event history analysis / Logistic Regression (Frątczak)
 9. Big Data (Rafało)
+10. Agents
