@@ -158,6 +158,6 @@ ggscatter(ts_df, x = "AMD", y = "INTC",
 
 Wyznajmy dopasowanie rozkładu t- Studenta dla skorygowanej ceny zamknięcia dla firmy Qualcomm:
 ```{r, echo=FALSE}
-fd <- fitdistr(ts_df$QCOM, "t", start = list(m=mean(ts_df$QCOM),s=sd(ts_df$QCOM), df=3), lower=c(-1, 0.001,1))
+fd <- fitdistr(ts_df$QCOM, "t", start = list(m=mean(ts_df$QCOM),s=sd(ts_df$QCOM), df=4), lower=c(-1, 0.001,1))
 pander(fd)
 ```
