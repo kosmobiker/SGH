@@ -1,26 +1,23 @@
-library(tidyverse)
-library(ggpubr)
-library(SimDesign)
-
-
-seq_of_probes <- c(100, 500, 1000, 2000, 5000, 10000)
-df_res <- data.frame(matrix(ncol = 5, nrow = 0))
-
-for (n in seq_of_probes)
-{
-  Income  = rgamma(n,2)*1000
-  epsilon = rnorm(n, 0, 100)
-  a_true = 100
-  b_true = 0.1
-  Expenditure = a_true + b_true*Income + epsilon
-  temp_df <- data.frame(Income, epsilon, Expenditure)
-  model <- lm(Expenditure ~ Income, data = temp_df)
-  a_pred <- model$coefficients[1][1]
-  b_pred <- model$coefficients[2][1]
-  df_res <- rbind(df_res, c(n, a_true, a_pred, b_true, b_pred))
+set.seed(1234)
+RW <- function(N, x0, mu, variance) {
+  z<-cumsum(rnorm(n=N, 
+                  mean=0, 
+                  sd=sqrt(variance)))
+  t<-1:N
+  x<-x0+t*mu+z
+  return(x)
 }
-colnames(df_res) <- c('num', 'a_true', 'a_pred', 'b_true', 'b_pred')
-bias_a <- 1/length(df_res$a_pred)*sum(df_res$a_true - df_res$a_pred)
-bias_b <- 1/length(df_res$b_pred)*sum(df_res$b_true - df_res$b_pred)
-rse_a <-  1/length(df_res$a_pred)*sum(df_res$a_true - df_res$a_pred)^2
-rse_b <- 1/length(df_res$b_pred)*sum(df_res$b_true - df_res$b_pred)^2
+
+P1<-RW(10000, 0, 0.005, 1)
+P2<-RW(10000, 0, 0.005, 1)
+P3<-RW(10000, 0, 0.005, 1)
+
+df <- data.frame(P1, P2, P3)
+
+img1 <- ggplot(data=df, aes(x=as.numeric(row.names(df)))) + 
+      geom_line(aes(y=P1), color='red', size=0.5) + 
+      geom_line(aes(y=P2), color='blue', size=0.5) + 
+      geom_line(aes(y=P3), color='green', size=0.5) + 
+      xlab("X") + ylab("Y")
+
+print(img1)       

@@ -6,11 +6,6 @@ email: "ud108519@student.sgh.waw.pl"
 date: "`r Sys.Date()`"
 output: html_document
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 # 1.Liczba $\pi$
 
 Dokonaj wyznaczenia liczby π korzystając z koła o środku (0, 0) i promieniu r = 0, 5.
@@ -27,9 +22,10 @@ library(wakefield)
 library(gridExtra)
 library(pander)
 set.seed(42)
+print(RNGkind())
 ```
 
-```{r, include = TRUE, fig.dim = c(7, 7)}
+```{r, include = TRUE, fig.dim = c(5, 5)}
 num_probes = 100
 x=runif(num_probes, -1, 1)
 y=runif(num_probes, -1, 1)
@@ -39,10 +35,16 @@ df <- data.frame(x, y, z)
 pi_number = length(which(z<=1))*4/length(z)
 
 img <- ggplot(data=df) + 
-        geom_point(aes(x=x, y=y, colour = z < 1), size  = 0.5) + 
+        geom_point(aes(x=x, y=y, colour = z < 1), size  = 2) + 
         geom_circle(aes(x0 = 0, y0 = 0, r = 1), inherit.aes = FALSE) + 
         scale_colour_manual(name = 'z < 1', values = setNames(c('red','blue'), c(T, F)))
 print(img)
+
+num_probes = 10000
+x=runif(num_probes, -1, 1)
+y=runif(num_probes, -1, 1)
+z=sqrt(x^2+y^2)
+pi_number = length(which(z<=1))*4/length(z)
 ```
 
 Liczba $\pi$ według symulacji wynosi `r pi_number`
@@ -78,14 +80,14 @@ $y = a + bx + ε$
 
 np.
 
-**Expenditure = a + b x Income + ε**
+***Expenditure = a + bIncome + ε***
 
 Oszacuj paremetry modelu. Wyznacz obciążenie i średni błąd parametrów stosując
 symulacje Monte Carlo. Kiedy metody symulacyjne mają sens w przypadku estymatora
 najmniejszych kwadratów (w myśl założeń Gaussa-Markowa).
 
 ```{r, include = TRUE, fig.dim = c(5, 15)}
-seq_of_probes <- c(100, 500, 1000, 2000, 5000, 10000)
+seq_of_probes <- c(100, 500, 750, 1500, 3000, 5000, 10000)
 df_res <- data.frame(matrix(ncol = 5, nrow = 0))
 
 for (n in seq_of_probes)
@@ -118,4 +120,29 @@ Obciążenie empiryczne parametru ***b*** wynosi `r bias_b`
 
 Średni błąd parametru ***b*** wynosi `r rse_b`
  
-# 5. ,dsakdsakdopkpasodkasopk  
+# 4. Błądzenie losowe - Random Walk
+
+Przykład ruchu Browna
+```{r, include = TRUE, fig.dim = c(15, 5)}
+RW <- function(N, x0, mu, variance) {
+  z<-cumsum(rnorm(n=N, 
+                  mean=0, 
+                  sd=sqrt(variance)))
+  t<-1:N
+  x<-x0+t*mu+z
+  return(x)
+}
+
+P1<-RW(10000, 0, 0.005, 1)
+P2<-RW(10000, 0, 0.005, 1)
+P3<-RW(10000, 0, 0.005, 1)
+
+df <- data.frame(P1, P2, P3)
+
+img1 <- ggplot(data=df, aes(x=as.numeric(row.names(df)))) + 
+      geom_line(aes(y=P1), color='orange', size=0.5) + 
+      geom_line(aes(y=P2), color='blue', size=0.5) + 
+      geom_line(aes(y=P3), color='maroon', size=0.5) + 
+      xlab("X") + ylab("Y")
+
+print(img1)       
