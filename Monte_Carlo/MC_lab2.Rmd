@@ -1,0 +1,148 @@
+---
+title: "Symulacje Monte Carlo i Bootstraping w środowisku R (234240-D)"
+subtitle: "Lab #2"
+author: "Uladzislau Darhevich"
+email: "ud108519@student.sgh.waw.pl"
+date: "`r Sys.Date()`"
+output: html_document
+---
+# 1.Liczba $\pi$
+
+Dokonaj wyznaczenia liczby π korzystając z koła o środku (0, 0) i promieniu r = 0, 5.
+Liczba symulacji N = 10000. Wykorzystaj rozkład jednostajny dyskretny tj. rozkład w
+którym jednakowe prawdopodobieństwo przypisane jest do n różnych liczb rzeczywistych
+z1, . . . , zn, a inne liczby mają przypisane prawdopodobieństwo zero.
+
+```{r , echo=FALSE, results='hide', include=FALSE}
+library(ggplot2)
+library(ggforce)
+library(ggpubr)
+library(ggplot2)
+library(wakefield)
+library(gridExtra)
+library(pander)
+set.seed(42)
+print(RNGkind())
+```
+
+```{r, include = TRUE, fig.dim = c(5, 5)}
+num_probes = 100
+x=runif(num_probes, -1, 1)
+y=runif(num_probes, -1, 1)
+z=sqrt(x^2+y^2)
+df <- data.frame(x, y, z)
+
+pi_number = length(which(z<=1))*4/length(z)
+
+img <- ggplot(data=df) + 
+        geom_point(aes(x=x, y=y, colour = z < 1), size  = 2) + 
+        geom_circle(aes(x0 = 0, y0 = 0, r = 1), inherit.aes = FALSE) + 
+        scale_colour_manual(name = 'z < 1', values = setNames(c('red','blue'), c(T, F)))
+print(img)
+
+num_probes = 10000
+x=runif(num_probes, -1, 1)
+y=runif(num_probes, -1, 1)
+z=sqrt(x^2+y^2)
+pi_number = length(which(z<=1))*4/length(z)
+```
+
+Liczba $\pi$ według symulacji wynosi `r pi_number`
+
+# 2. Symulacje rozkładów
+
+Zbadaj zmienność symulowanych liczb z rozkładu jednostajengo, normalnego i t-Studenta
+
+```{r, include = TRUE, fig.dim = c(5, 15)}
+
+num_probes = 10000
+univariate  <- runif(num_probes)
+normal <- rnorm(num_probes)
+student <- rt(num_probes, 10)
+df_dist <- data.frame(univariate, normal, student)
+
+img1 <- ggplot(data = df_dist, aes(x=univariate)) + 
+        geom_histogram(binwidth=0.05, color="black", fill="red") + 
+        ggtitle("Rozkład jednostajny")
+img2 <- ggplot(data = df_dist, aes(x=normal)) + 
+        geom_histogram(binwidth=0.2, color="black", fill="blue") +
+        ggtitle("Rozkład normalny")
+img3 <- ggplot(data = df_dist, aes(x=student)) + 
+        geom_histogram(binwidth=0.2, color="black", fill="orange") +
+        ggtitle("Rozkład t-Studenta")
+grid.arrange(img1, img2, img3, nrow=3)
+```
+
+# 3. Monte Carlo + Regresja liniowa
+Zbuduj model regresji liniowej zjawiska ekonomicznego.
+
+$y = a + bx + ε$
+
+np.
+
+***Expenditure = a + bIncome + ε***
+
+Oszacuj paremetry modelu. Wyznacz obciążenie i średni błąd parametrów stosując
+symulacje Monte Carlo. Kiedy metody symulacyjne mają sens w przypadku estymatora
+najmniejszych kwadratów (w myśl założeń Gaussa-Markowa).
+
+```{r, include = TRUE, fig.dim = c(5, 15)}
+seq_of_probes <- c(100, 500, 750, 1500, 3000, 5000, 10000)
+df_res <- data.frame(matrix(ncol = 5, nrow = 0))
+
+for (n in seq_of_probes)
+{
+  Income  = rgamma(n,2)*1000
+  epsilon = rnorm(n, 0, 100)
+  a_true = 100
+  b_true = 0.1
+  Expenditure = a_true + b_true*Income + epsilon
+  temp_df <- data.frame(Income, epsilon, Expenditure)
+  model <- lm(Expenditure ~ Income, data = temp_df)
+  a_pred <- model$coefficients[1][1]
+  b_pred <- model$coefficients[2][1]
+  df_res <- rbind(df_res, c(n, a_true, a_pred, b_true, b_pred))
+}
+colnames(df_res) <- c('num', 'a_true', 'a_pred', 'b_true', 'b_pred')
+bias_a <- round(1/length(df_res$a_pred)*sum(df_res$a_true - df_res$a_pred), 3)
+bias_b <- round(1/length(df_res$b_pred)*sum(df_res$b_true - df_res$b_pred), 3)
+rse_a <-  round(1/length(df_res$a_pred)*sum(df_res$a_true - df_res$a_pred)^2, 3)
+rse_b <- round(1/length(df_res$b_pred)*sum(df_res$b_true - df_res$b_pred)^2, 3)
+
+pander(df_res, type = 'grid')
+```
+
+Obciążenie empiryczne parametru ***a*** wynosi `r bias_a`
+
+Obciążenie empiryczne parametru ***b*** wynosi `r bias_b`
+
+Średni błąd parametru ***a*** wynosi `r rse_a`
+
+Średni błąd parametru ***b*** wynosi `r rse_b`
+ 
+# 4. Błądzenie losowe - Random Walk
+
+Przykład ruchu Browna
+```{r, include = TRUE, fig.dim = c(15, 5)}
+RW <- function(N, x0, mu, variance) {
+  z<-cumsum(rnorm(n=N, 
+                  mean=0, 
+                  sd=sqrt(variance)))
+  t<-1:N
+  x<-x0+t*mu+z
+  return(x)
+}
+
+P1<-RW(10000, 0, 0.005, 1)
+P2<-RW(10000, 0, 0.005, 1)
+P3<-RW(10000, 0, 0.005, 1)
+
+df <- data.frame(P1, P2, P3)
+
+img1 <- ggplot(data=df, aes(x=as.numeric(row.names(df)))) + 
+      geom_line(aes(y=P1), color='orange', size=0.5) + 
+      geom_line(aes(y=P2), color='blue', size=0.5) + 
+      geom_line(aes(y=P3), color='maroon', size=0.5) + 
+      xlab("X") + ylab("Y")
+
+print(img1)       
