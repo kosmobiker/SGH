@@ -13,4 +13,7 @@ List of subjects:
 7. Data bases (Wódz)
 8. Event history analysis / Logistic Regression (Frątczak)
 9. Big Data (Rafało)
-10. Agents
+10. Advanced Business Analytics (Korczyński)
+11. Monte Carlo simulations (Ratuszny)
+12. Multi-agent modeling (Kamiński)
+13. Cryptography (Dryło)
