@@ -1,0 +1,151 @@
+---
+title: "Symulacje Monte Carlo i Bootstraping w środowisku R (234240-D)"
+subtitle: "Lab #3"
+author: "Uladzislau Darhevich"
+email: "ud108519@student.sgh.waw.pl"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# 1. Geometryczny Ruch Browna - zadanie
+
+Zasymuluj kształtowanie ścieżki cen przy założeniach:
+
+$\ S_t = S_0\exp\left((\mu-\frac{\sigma^2}{2})\Delta t + \sigma\sqrt{\Delta t}Z  \right)$
+
+gdzie Z ∼ N(0, 1), n = 1000, µ = 1, σ = 0.8, $\ S_0$ = 100.
+```{r, message=FALSE}
+library(ggplot2)
+library(ragtop)
+library(tidyverse)
+library(pander)
+set.seed(42)
+
+GRB <- function(nsim = 100, t = 25, mu = 0, sigma = 0.1, S0 = 100, dt = 1./365) {
+  # matrix of random draws - one for each day for each simulation
+  z <- matrix(rnorm(t*nsim), ncol = nsim, nrow = t)  
+  # get GBM and convert to price paths
+  gbm <- exp((mu - sigma * sigma / 2) * dt + sigma * z * sqrt(dt))
+  gbm <- apply(rbind(rep(S0, nsim), gbm), 2, cumprod)
+  return(gbm)
+}
+
+rb1 <- GRB(1000, 22, 1, 0.8, 100)
+
+df <- as.data.frame(rb1) %>%
+  mutate(ix = 1:nrow(rb1)) %>%
+  pivot_longer(-ix, names_to = 'sim', values_to = 'price')
+```
+Wizualizacja symulacji
+
+```{r, echo=FALSE, fig.dim = c(15, 5)}
+img <- 
+  ggplot(data = df, aes(x=ix, y=price, color=sim)) +
+  geom_line() +
+  ggtitle("Ruch Browna. Symulacja N=1000") + 
+  theme(legend.position = 'none')
+print(img)
+```
+
+# 2. Opcje europejskie
+
+Przewidujemy, że dojdzie do zmiany zarządu spółki KGHM w przeciągu miesiąca i
+ogłoszenia nowej strategii spółki. Obecnie cena wynosi 184PLN. Cena pakietu 100 akcji wyniosłaby zatem ..... Nie mamy tyle gotówki więc decydujemy się na zakup za 100x15 PLN (premia) opcję kupna na pakiet 100 akcji spółki KGHM z ceną wykonania 170PLN i terminem wygaśnięcia za 3 tygodnie. Jakie będą wypłaty w przypadku gdy cena na giełdzie wyniesie:
+
+* 196PLN
+* 161PLN
+* 170PLN
+```{r , echo=FALSE}
+stocks <- function(S0, S, N, delta){
+  profit <- S*N - S0*N - delta*N
+  return(profit)
+}
+KGHM_196 <- stocks(170, 196, 100, 15)
+KGHM_161 <- stocks(170, 161, 100, 15)
+KGHM_170 <- stocks(170, 170, 100, 15)
+```
+|Cena na akcje |Zysk
+--- | --- 
+|196|`r KGHM_196`
+|161|`r KGHM_161`
+|170|`r KGHM_170`
+```{r,message=FALSE}
+BlackScholes <- function(S, K, r, T, sig, type){
+  # S = Stock Price
+  # K = Strike Price at Expiration 
+  # r = Risk-free Interest Rate
+  # T = Time to Expiration
+  # sig = Volatility of the Underlying asset
+  if(type=="C"){
+    d1 <- (log(S/K) + (r + sig^2/2)*T) / (sig*sqrt(T))
+    d2 <- d1 - sig*sqrt(T)
+    
+    value <- S*pnorm(d1) - K*exp(-r*T)*pnorm(d2)
+    return(value)}
+  
+  if(type=="P"){
+    d1 <- (log(S/K) + (r + sig^2/2)*T) / (sig*sqrt(T))
+    d2 <- d1 - sig*sqrt(T)
+    
+    value <-  (K*exp(-r*T)*pnorm(-d2) - S*pnorm(-d1))
+    return(value)}
+}
+prices <- c(196, 161, 170)
+calls <- lapply(prices, BlackScholes, S=184, r=0.03, T=3/52, sig=0.2, type="C")
+puts <- lapply(prices, BlackScholes, S=184, r=0.03, T=3/52, sig=0.2, type="P")
+df <- data.frame(unlist(prices), unlist(calls), unlist(puts))
+names(df) <- c("Cena opcji, PLN", "CALL", "PUT")
+pander(df, type = 'grid')
+```
+
+# 3. Praca domowa
+
+A coin is tossed n times, thereby generating a sequence of heads (H) and tails (T). A subsequence of consecutive heads is called a run of heads. Consequently, the following sequence ***HHTHTTHHHHTTTHHTTTTH*** of length n = 20 contains 5 runs of heads with lengths 2,1,4,2,1, respectively. The longest run of heads is Mn = 4.  
+
+* Write a function (in R) which generates random sequences of heads and tails for any value of n.  
+
+* Write a function which computes the length of the longest run of heads in an arbitrary sequence of heads and tails.  
+
+* For a sequence of length n = 1000, we have observed a longest run of heads equal to Mn = 6. Based on your decision on this piece of information, do you believe that the coin is fair or not?  
+
+Funkcja do generacji losowej sekwencje orłów i reszek dla dowolnej wartości N:
+
+```{r,message=FALSE}
+generate_values <- function(N, values){
+  #N - number of values to generate
+  #values - list of values to geenerate from e.g "H", "T"
+  z <- sample(x = values, 
+              size = N,
+              replace = TRUE)
+  return(z)
+}
+```
+
+Funkcja, która oblicza długość najdłuższego biegu orłów w dowolnej kolejności orłów i reszek:
+
+```{r,message=FALSE}
+longest_run <- function(x){
+  #x - sequence of some values
+  z <- tapply(rle(x)$lengths, rle(x)$values, FUN=max)
+  return(z)
+}
+```
+
+Sgenerujmy losową sekwencję orłów i reszek N = 1000 i obliczmy długość najdłuższego biegu orłów oraz reszek. Zróbmy to 10000 razy i obliczymy śriedną
+
+```{r,message=FALSE}
+average_num_of_heads <- function(N){
+  tmp <- replicate(N, longest_run(generate_values(1000, c("H", "T")))["H"], simplify=TRUE)
+  return(round(mean(tmp), 0))
+}
+average_head_run <- average_num_of_heads(10000)
+
+p <- 0.5
+n <- 1000
+L <- round(-log(n*(1-p), base=p), 0)
+```
+
+Śriednia długość biegu według symulacji wynosi `r average_head_run`.
+
+Na podstawie [artukułu](https://alexamarioarei.github.io/Research/docs/LongestHrunReview.pdf) oraz [linka](https://math.stackexchange.com/questions/1409372/what-is-the-expected-length-of-the-largest-run-of-heads-if-we-make-1-000-flips) teoretyczny najdłuższy przebieg orłów można oszacować za pomocą wzoru $\ L \approx -\log _p n(1-p)$, gdzie p=0.5. Wtedy dla N = 1000 L wynosi `r L`.
+
