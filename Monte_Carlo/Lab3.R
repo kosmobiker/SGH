@@ -1,5 +1,4 @@
 library(ggplot2)
-library(ragtop)
 library(tidyverse)
 
 GRB <- function(nsim = 100, t = 25, mu = 0, sigma = 0.1, S0 = 100, dt = 1./365) {

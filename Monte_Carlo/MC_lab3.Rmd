@@ -16,7 +16,6 @@ $\ S_t = S_0\exp\left((\mu-\frac{\sigma^2}{2})\Delta t + \sigma\sqrt{\Delta t}Z 
 gdzie Z ∼ N(0, 1), n = 1000, µ = 1, σ = 0.8, $\ S_0$ = 100.
 ```{r, message=FALSE}
 library(ggplot2)
-library(ragtop)
 library(tidyverse)
 library(pander)
 set.seed(42)
@@ -36,6 +35,7 @@ df <- as.data.frame(rb1) %>%
   mutate(ix = 1:nrow(rb1)) %>%
   pivot_longer(-ix, names_to = 'sim', values_to = 'price')
 ```
+
 Wizualizacja symulacji
 
 ```{r, echo=FALSE, fig.dim = c(15, 5)}
@@ -43,6 +43,7 @@ img <-
   ggplot(data = df, aes(x=ix, y=price, color=sim)) +
   geom_line() +
   ggtitle("Ruch Browna. Symulacja N=1000") + 
+  xlab("X") + ylab("PLN") + 
   theme(legend.position = 'none')
 print(img)
 ```
@@ -121,7 +122,7 @@ generate_values <- function(N, values){
 }
 ```
 
-Funkcja, która oblicza długość najdłuższego biegu orłów w dowolnej kolejności orłów i reszek:
+Funkcja, która oblicza długość najdłuższej serii  orłów w dowolnej kolejności orłów i reszek:
 
 ```{r,message=FALSE}
 longest_run <- function(x){
@@ -131,7 +132,7 @@ longest_run <- function(x){
 }
 ```
 
-Sgenerujmy losową sekwencję orłów i reszek N = 1000 i obliczmy długość najdłuższego biegu orłów oraz reszek. Zróbmy to 10000 razy i obliczymy śriedną
+Wygenerujmy losową sekwencję orłów i reszek N = 1000 i obliczmy długość najdłuższego biegu orłów oraz reszek. Zróbmy to 10000 razy i obliczmy śriedną
 
 ```{r,message=FALSE}
 average_num_of_heads <- function(N){
@@ -145,7 +146,8 @@ n <- 1000
 L <- round(-log(n*(1-p), base=p), 0)
 ```
 
-Śriednia długość biegu według symulacji wynosi `r average_head_run`.
+Śriednia długość serii według symulacji wynosi `r average_head_run`.
 
 Na podstawie [artukułu](https://alexamarioarei.github.io/Research/docs/LongestHrunReview.pdf) oraz [linka](https://math.stackexchange.com/questions/1409372/what-is-the-expected-length-of-the-largest-run-of-heads-if-we-make-1-000-flips) teoretyczny najdłuższy przebieg orłów można oszacować za pomocą wzoru $\ L \approx -\log _p n(1-p)$, gdzie p=0.5. Wtedy dla N = 1000 L wynosi `r L`.
 
+Na podstawie obliczeń teoretycznych i symulacji można stwierdzić, że moneta ***nie jest uczciwą***.
