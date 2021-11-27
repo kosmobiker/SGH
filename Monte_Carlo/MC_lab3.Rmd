@@ -114,9 +114,9 @@ Funkcja do generacji losowej sekwencje orłów i reszek dla dowolnej wartości N
 ```{r,message=FALSE}
 generate_values <- function(N, values){
   #N - number of values to generate
-  #values - list of values to geenerate from e.g "H", "T"
-  z <- sample(x = values, 
-              size = N,
+  #values - list of values to generate, e.g "H", "T"
+  z <- sample(size = N,
+              x = values, 
               replace = TRUE)
   return(z)
 }
