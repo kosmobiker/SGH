@@ -1,0 +1,212 @@
+---
+title: "Symulacje Monte Carlo i Bootstraping w środowisku R (234240-D)"
+subtitle: "Lab #4"
+author: "Uladzislau Darhevich"
+email: "ud108519@student.sgh.waw.pl"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# 1. Ciągi o niskiej dyskrepancji. Algorytmy Haltona i Sobola generowania ciągów w R.
+
+## Zadanie:
+
+* Korzystając z bibiloteki `randtoolbox` znajdź funkcję do generowania ciągów o niskiej
+rozbieżności
+* Porównaj ciągi (wykresy)
+* Korzystając z bibiloteki `fOptions` znajdź funkcję do generowania ciągów o niskiej rozbieżności o rozkładzie....
+* Rozszerz funkcję wyceny opcji o dwa dodatkowe generatory ciągów
+
+```{r, include=FALSE}
+library(randtoolbox)
+library(ggplot2)
+library(plotly)
+library(ggpubr)
+library(dplyr)
+library(tidyr)
+library(fOptions)
+library(copula)
+library(VineCopula)
+library(tidyverse)
+library(scatterplot3d)
+library(BatchGetSymbols)
+library(pander)
+set.seed(42)
+```
+
+Generowanie ciągów Haltona, Sobol'a oraz ciągów z rozkładem jednostajnym za pomocą `randtoolbox`
+
+```{r, echo=TRUE, fig.dim = c(15, 10), message=FALSE}
+h <- halton(1000, 2)
+s <- sobol(1000, 2)
+r <- matrix(runif(2000), nrow = 1000, ncol = 2)
+df <- data.frame(unlist(h), unlist(s), unlist(r)) 
+names(df) <- c("Halton1", "Halton2", "Sobol1", "Sobol2", "Random1", "Random2")
+img1 <- ggplot(df, aes(x=Halton1, y=Halton2)) +
+  geom_point(color='darkorange1') +
+  xlab("X") + ylab("Y")
+img2 <- ggplot(df, aes(x=Sobol1, y=Sobol2)) +
+  geom_point(color='darkcyan') +
+  xlab("X") + ylab("Y") 
+img3 <- ggplot(df, aes(x=Random1, y=Random2)) +
+  geom_point(color='darkblue') +
+  xlab("X") + ylab("Y") 
+img <- ggarrange(img1, img2, img3, 
+          labels = c("Halton", "Sobol", "Random"),
+          ncol = 2, nrow = 2)
+print(img)
+```
+
+Generowanie ciągów Haltona, Sobol'a oraz ciągów z rozkładem jednostajnym za pomocą `fOptions`
+
+```{r, echo=TRUE, fig.dim = c(15, 10), message=FALSE}
+h1 <- runif.halton(1000, 2)
+s1 <- runif.sobol(1000, 2)
+r1 <- matrix(runif.pseudo(2000, 2), nrow = 1000, ncol = 2)
+df1 <- data.frame(unlist(h1), unlist(s1), unlist(r1)) 
+names(df1) <- c("Halton1", "Halton2", "Sobol1", "Sobol2", "Random1", "Random2")
+img1 <- ggplot(df1, aes(x=Halton1, y=Halton2)) +
+  geom_point(color='darkorange1') +
+  xlab("X") + ylab("Y")
+img2 <- ggplot(df1, aes(x=Sobol1, y=Sobol2)) +
+  geom_point(color='darkcyan') +
+  xlab("X") + ylab("Y") 
+img3 <- ggplot(df1, aes(x=Random1, y=Random2)) +
+  geom_point(color='darkblue') +
+  xlab("X") + ylab("Y") 
+img <- ggarrange(img1, img2, img3, 
+          labels = c("Halton_fOptions", "Sobol_fOptions", "Random_fOptions"),
+          ncol = 2, nrow = 2)
+print(img)
+```
+
+Zmodyfikowana funkcja BlackScholes'a z użyciem ciągów o niskiej rozbieżności o rozkładzie normalnym
+
+```{r,message=FALSE}
+prices <- c(196, 161, 170)
+calls <- NULL
+puts <- NULL
+for (i in prices){
+  tmp <- GBSOption(TypeFlag = "c", S = i, X = 184, Time = 3/52, r = 0.03,
+                   b = 0.03, sigma = 0.20)@price
+  calls <- rbind(calls, tmp)
+  tmp <- GBSOption(TypeFlag = "p", S = i, X = 184, Time = 3/52, r = 0.03,
+                   b = 0.03, sigma = 0.20)@price
+  puts <- rbind(puts, tmp)
+}
+df <- data.frame(unlist(prices), unlist(calls), unlist(puts))
+names(df) <- c("Cena opcji, PLN", "CALL", "PUT")
+rownames(df) <- df$prices
+pander(df, type = 'grid')
+```
+
+# 2. Kopule
+
+## Zadanie:
+* Wczytaj dwa szeregi czasowe.
+* Korzystając z bibiloteki `VineCopula` znajdź funkcję do estymacji parametrów i rodzaju
+kopuli.
+* Porównaj parametry korzystając z pakietu `copula`
+* Narysuj wykres kopuli.
+* Korzystając z parametrów zasymuluj n prób.
+* Wyznacz współczynnik korelacji Kendalla.
+
+Jako szeregi czasowe weźmy dane o cenach akcji (*adjusted closign price*) dla dwóch firm produkujących podobne towary: ***DELL*** oraz ***HPE*** za ostatnie 1000 dni
+
+```{r,message=FALSE}
+first.date <- Sys.Date() - 1000
+last.date <- Sys.Date()
+freq.data <- 'daily'
+tickers <- c('HPE', 'DELL')
+#pobieranie danych
+l.out <- BatchGetSymbols(tickers = tickers, 
+                         first.date = first.date,
+                         last.date = last.date, 
+                         freq.data = freq.data,
+                         cache.folder = file.path(tempdir(), 
+                                                  'BGS_Cache'))
+
+df <- l.out$df.tickers
+df <- df %>% select(ref.date, ticker, price.adjusted) 
+df <- spread(df, ticker, price.adjusted)
+```
+
+Korzystając z bibiloteki `VineCopula` użyjmy funkcję `BiCopSelect` do estymacji parametrów i rodzaju kopuli.Do algorytmu selekcji trzeba prowadzić pseudo obserwacje za pomocą funkcji `pobs()`. Pseudo obserwacje to obserwacje w przedziale [0,1].
+
+```{r,message=FALSE, warning=FALSE}
+hpe <- pobs(df)[, 2]
+dell <- pobs(df)[, 3]
+m <- as.matrix(cbind(hpe,dell))
+selectedCopula <- BiCopSelect(hpe, dell, familyset = NA)
+par_1 <- selectedCopula$par
+pander(selectedCopula)
+```
+
+Według estymacji optymalną kopulą będzie kopula Gaussa. Spróbujmy dopasować sugerowany model za pomocą pakietu `copula` i dokładnie sprawdzić dopasowane parametry.
+
+```{r,message=FALSE}
+gauss_cop <- normalCopula(dim=2)
+fit <- fitCopula(gauss_cop, m, method='ml')
+par_2 <- coef(fit)
+```
+
+Parameter `par` według `BiCopSelect` wynosi `r par_1`, według `fitCopula` wynosi `r par_2`.
+
+Po zamontowaniu kopuły możemy sprawdzić, czy dopasowanie jest dobre, czy nie. Aby wykonać ten test GOF, możemy użyć funkcji `gofcopula()` jak poniżej. Dla porównania, przeprowadzono go dwa razy, najpierw z kopułą Gaussa, a następnie z Claytonem.
+
+```{r,message=FALSE, warning = FALSE, results='asis'}
+gf <- gofCopula(gauss_cop, m, N = 50)
+pander(gf)
+```
+
+Zasymulujmy 10000 prób korzystając z parametrów i zróbmy wykresy
+
+```{r, fig.dim = c(5, 5), message=FALSE, warning = FALSE}
+x_mean <- mean(df$HPE)
+x_var <- var(df$HPE)
+x_rate <- x_mean / x_var
+x_shape <- ( (x_mean)^2 ) / x_var
+
+y_mean <- mean(df$DELL)
+y_var <- var(df$DELL)
+y_rate <- y_mean / y_var
+y_shape <- ( (y_mean)^2 ) / y_var
+
+
+my_dist <- mvdc(normalCopula(par_2, dim=2),
+                margins = c("gamma","gamma"),
+                paramMargins = list(list(shape = x_shape, 
+                                         rate = x_rate), 
+                              list(shape = y_shape, 
+                                   rate = y_rate)
+                                    )
+                )
+v <- rMvdc(5000, my_dist)
+pdf_mvd <- dMvdc(v, my_dist) #gęstość
+cdf_mvd <- pMvdc(v, my_dist) #dystrybuanta
+
+img1 <- scatterplot3d(v[, 1], v[, 2],
+                      pdf_mvd, 
+                      color="blue", 
+                      main="Density", 
+                      xlab = "u1", 
+                      ylab="u2", 
+                      zlab="pMvdc",
+                      pch=".")
+img2 <- scatterplot3d(v[, 1],v[, 2], 
+                      cdf_mvd, 
+                      color="green", 
+                      main="CDF", 
+                      xlab = "u1", 
+                      ylab="u2", 
+                      zlab="pMvdc",
+                      pch=".")
+
+```
+
+Współczynnik korelacji Kendalla wynosi:
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE}
+kendall <- cor(m, method = "kendall")
+pander(kendall, type = 'grid')
+```
