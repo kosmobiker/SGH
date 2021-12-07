@@ -111,7 +111,7 @@ kopuli.
 * Korzystając z parametrów zasymuluj n prób.
 * Wyznacz współczynnik korelacji Kendalla.
 
-Jako szeregi czasowe weźmy dane o cenach akcji (*adjusted closign price*) dla dwóch firm produkujących podobne towary: ***DELL*** oraz ***HPE*** za ostatnie 1000 dni
+Jako szeregi czasowe weźmy dane o cenach akcji (*adjusted closing price*) dla dwóch firm produkujących podobne towary: ***DELL*** oraz ***HPE*** za ostatnie 1000 dni
 
 ```{r,message=FALSE}
 first.date <- Sys.Date() - 1000
@@ -131,7 +131,7 @@ df <- df %>% select(ref.date, ticker, price.adjusted)
 df <- spread(df, ticker, price.adjusted)
 ```
 
-Korzystając z bibiloteki `VineCopula` użyjmy funkcję `BiCopSelect` do estymacji parametrów i rodzaju kopuli.Do algorytmu selekcji trzeba prowadzić pseudo obserwacje za pomocą funkcji `pobs()`. Pseudo obserwacje to obserwacje w przedziale [0,1].
+Korzystając z bibiloteki `VineCopula` użyjmy funkcję `BiCopSelect` do estymacji parametrów i rodzaju kopuli. Do algorytmu selekcji trzeba prowadzić pseudo obserwacje za pomocą funkcji `pobs()`. Pseudo obserwacje to obserwacje w przedziale [0,1].
 
 ```{r,message=FALSE, warning=FALSE}
 hpe <- pobs(df)[, 2]
@@ -152,7 +152,7 @@ par_2 <- coef(fit)
 
 Parameter `par` według `BiCopSelect` wynosi `r par_1`, według `fitCopula` wynosi `r par_2`.
 
-Po zamontowaniu kopuły możemy sprawdzić, czy dopasowanie jest dobre, czy nie. Aby wykonać ten test GOF, możemy użyć funkcji `gofcopula()` jak poniżej. Dla porównania, przeprowadzono go dwa razy, najpierw z kopułą Gaussa, a następnie z Claytonem.
+Po zamontowaniu kopuły możemy sprawdzić, czy dopasowanie jest dobre, czy nie. Aby wykonać ten test GOF, możemy użyć funkcji `gofcopula()` jak poniżej.
 
 ```{r,message=FALSE, warning = FALSE, results='asis'}
 gf <- gofCopula(gauss_cop, m, N = 50)
@@ -165,12 +165,12 @@ Zasymulujmy 10000 prób korzystając z parametrów i zróbmy wykresy
 x_mean <- mean(df$HPE)
 x_var <- var(df$HPE)
 x_rate <- x_mean / x_var
-x_shape <- ( (x_mean)^2 ) / x_var
+x_shape <- ((x_mean)^2) / x_var
 
 y_mean <- mean(df$DELL)
 y_var <- var(df$DELL)
 y_rate <- y_mean / y_var
-y_shape <- ( (y_mean)^2 ) / y_var
+y_shape <- ((y_mean)^2) / y_var
 
 
 my_dist <- mvdc(normalCopula(par_2, dim=2),
@@ -181,7 +181,7 @@ my_dist <- mvdc(normalCopula(par_2, dim=2),
                                    rate = y_rate)
                                     )
                 )
-v <- rMvdc(5000, my_dist)
+v <- rMvdc(10000, my_dist)
 pdf_mvd <- dMvdc(v, my_dist) #gęstość
 cdf_mvd <- pMvdc(v, my_dist) #dystrybuanta
 
