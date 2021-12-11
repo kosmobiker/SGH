@@ -20,7 +20,8 @@ git rm -r .ipynb_checkpoints/
 /Data_Mining/DM
 git rm -r /Data_Mining/DM
 /PiWD/Lectures
-
+/ADA/E/
+/ADA/P/
 
 # Created by https://www.toptal.com/developers/gitignore/api/r
 # Edit at https://www.toptal.com/developers/gitignore?templates=r
