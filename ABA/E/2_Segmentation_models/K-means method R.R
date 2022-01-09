@@ -2,7 +2,7 @@
 rm(list=ls())
 
 #--- setting working directory
-setwd("C:/ABA")
+# setwd("C:/ABA")
 
 #============================
 #--- importing packages
@@ -202,7 +202,7 @@ gridExtra::grid.arrange(ncol=3, nrow=1,
 #--- Segmentation using k-means method - by age and income
 #=================================================================
 
-# choosing wybranie wektora o analizy skupieñ
+# choosing wybranie wektora o analizy skupie?
 
 X1 <- df[, c("Age", "Spending.Score..1.100.")]
 
@@ -242,4 +242,3 @@ factoextra::fviz_cluster(object = model_seg,
                          show.clust.cent = T # are cluster centers to be shown in the plot?
                          ) +
   theme_light()
-
