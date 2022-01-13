@@ -114,3 +114,4 @@ res <- fitdistr(ts_df$MSFT, "t",
                              s=sd(ts_df$MSFT),
                              df=3),
                 lower=c(-1, 0.001,1))
+

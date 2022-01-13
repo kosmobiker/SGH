@@ -2,6 +2,7 @@ library(psych)
 library(quantmod)
 library(copula)
 library(VineCopula)
+library(BatchGetSymbols)
 
 cor(z,method='spearman')
 
