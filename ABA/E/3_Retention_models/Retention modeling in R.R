@@ -229,19 +229,22 @@ survminer::ggsurvplot(model,
            surv.median.line = "hv", # how to show lifetime median (here: horizontal & vertical lines)
            ggtheme = theme_bw())
 
-
-
+sum_events <- sum(model$n.event)
+sum_risk <- sum(model$n.risk)
 # Comparing estimates from SRM and GRM
 
 model_data <- data_frame(bigT = model$time, survival = model$surv)
 model_data <- model_data %>% 
-  dplyr::mutate(rhat = 1 - 44367/1073935,
-                clv = survival*23.20/(1.01^(bigT-1))) %>%
+  dplyr::mutate(rhat = 1 - sum_events/sum_risk,
+                clv = survival*25/(1.05^(bigT-1))) %>%
   dplyr::mutate(survSRM = (rhat)^(bigT-1),
-                clvSRM = 23.20*(rhat/1.01)^(bigT-1)) %>%
+                clvSRM = 25*(rhat/1.05)^(bigT-1)) %>%
   dplyr::select(bigT, survival, survSRM, clv, clvSRM)
 
+
 model_data
+sum(model_data$clv)
+sum(model_data$clvSRM)
 
 
 #===============================
@@ -277,3 +280,4 @@ model2_data %>%
   dplyr::select(bigT, survival, clv, strata) %>%
   dplyr::group_by(strata) %>%
   dplyr::summarise(expected_income = sum(clv))
+
