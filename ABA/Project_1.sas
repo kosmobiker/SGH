@@ -1,6 +1,3 @@
-/*setup seed*/
-%let seed=1234;
-
 /*import*/
 proc import datafile = '/home/u50020908/sasuser.v94/Data/beeps2005.csv'
 	out = work.beeps
@@ -41,7 +38,7 @@ proc sql;
 	where a1 in (50, 54, 59, 70, 72, 73, 74, 75, 76);
 quit;
 
-/* printing into rtf-file */
+/*printing into rtf-file */
 ods rtf file="/home/u50020908/sasuser.v94/SGH/temp/report.rtf" style=htmlblue;
 /*number of missing values for variables*/
 proc freq data=df;
@@ -51,7 +48,7 @@ run;
 /*Initial model - complete case analysis*/
 proc mixed data=df;
 	class country foreign_capital;
-	model log_total_profit = log_taxes country foreign_capital/ solution covb;
+	model log_total_profit = log_taxes country log_taxes*foreign_capital foreign_capital/ solution covb;
 	lsmeans foreign_capital / diff=all adjust=tukey;
 	ods output SOLUTIONF=parms01 CovB=mixovb LSMEANS=lsm01 DIFFS=lsmdiffs01;
 run;
@@ -62,7 +59,7 @@ proc means data=df n mean stderr lclm uclm alpha=0.05 min max;
 run;
 
 /*Imputation step*/
-proc mi data=df out=df1 nimpute=100 noprint;
+proc mi data=df out=df1 nimpute=100 noprint seed=1234;
 	var log_total_profit log_taxes foreign_capital;
 	mcmc initial=em;
 run;
